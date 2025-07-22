@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Engineer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#3b82f6',
+                            dark: '#60a5fa'
+                        },
+                        secondary: {
+                            light: '#10b981',
+                            dark: '#34d399'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .section {
+            min-height: 100vh;
+        }
+        .skill-category {
+            transition: all 0.3s ease;
+        }
+        .skill-category:hover {
+            transform: translateY(-5px);
+        }
+        #contact-form input,
+        #contact-form textarea {
+            transition: all 0.3s ease;
+        }
+        #contact-form input:focus,
+        #contact-form textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .dark .nav-link::after {
+            background-color: #60a5fa;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Header/Navigation -->
+    <header class="fixed w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#home" class="text-2xl font-bold text-primary-light dark:text-primary-dark">DevOpsPortfolio</a>
+                <div class="flex items-center space-x-6">
+                    <div class="hidden md:flex space-x-8">
+                        <a href="#home" class="nav-link">Home</a>
+                        <a href="#about" class="nav-link">About</a>
+                        <a href="#skills" class="nav-link">Skills</a>
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </div>
+                    <button id="theme-toggle" class="p-2 rounded-full focus:outline-none">
+                        <span id="light-icon" class="hidden">🌞</span>
+                        <span id="dark-icon" class="hidden">🌙</span>
+                    </button>
+                    <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                        ☰
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3">
+                <a href="#home" class="block py-2">Home</a>
+                <a href="#about" class="block py-2">About</a>
+                <a href="#skills" class="block py-2">Skills</a>
+                <a href="#contact" class="block py-2">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section flex items-center justify-center px-6">
+            <div class="container mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Thamizharasan S</h1>
+                <h2 class="text-2xl md:text-3xl font-semibold text-primary-light dark:text-primary-dark mb-6">DevOps Engineer</h2>
+                <p class="text-xl md:text-2xl max-w-2xl mx-auto">Automating Cloud Infrastructure and CI/CD Workflows</p>
+                <div class="mt-12">
+                    <a href="#contact" class="bg-primary-light dark:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">Get In Touch</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section py-20 px-6 bg-gray-100 dark:bg-gray-800">
+            <div class="container mx-auto max-w-4xl">
+                <h2 class="text-3xl font-bold mb-12 text-center">About Me</h2>
+                <div class="space-y-6 text-lg">
+                    <p>Proactively building a strong foundation in DevOps through hands-on projects and self-driven learning. Passionate about automating infrastructure, optimizing CI/CD pipelines, and exploring cloud-native solutions that scale.
+.</p>
+                    <p>I’ve worked with tools like Docker, Kubernetes, Terraform, Jenkins, GitHub Actions, and AWS, and have experience writing automation scripts in Python and Bash.</p>
+                    <p>I enjoy building and improving deployment pipelines, containerizing apps, and managing cloud infrastructure. Currently seeking opportunities to apply my skills in real-world environments and continue learning from experienced DevOps teams.</p>
+                    <p>I'm constantly learning and adapting to technologies to stay at the forefront of the DevOps landscape.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section py-20 px-6">
+            <div class="container mx-auto max-w-6xl">
+                <h2 class="text-3xl font-bold mb-12 text-center">Skills</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Cloud Platforms -->
+                    <div class="skill-category p-6 rounded-lg bg-white dark:bg-gray-800 shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-primary-light dark:text-primary-dark">Cloud Platforms</h3>
+                        <ul class="space-y-2">
+                            <li>AWS (EC2, S3, Lambda, RDS, DynamoDB, IAM, CloudFront,...</li>
+                        </ul>
+                    </div>
+
+                    <!-- CI/CD Tools -->
+                    <div class="skill-category p-6 rounded-lg bg-white dark:bg-gray-800 shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-primary-light dark:text-primary-dark">CI/CD Tools</h3>
+                        <ul class="space-y-2">
+                            <li>Jenkins</li>
+                            <li>GitHub Actions</li>
+                        </ul>
+                    </div>
+
+                    <!-- Containers & Orchestration -->
+                    <div class="skill-category p-6 rounded-lg bg-white dark:bg-gray-800 shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-primary-light dark:text-primary-dark">Containers & Orchestration</h3>
+                        <ul class="space-y-2">
+                            <li>Docker</li>
+                            <li>Kubernetes</li>
+                        </ul>
+                    </div>
+
+                    <!-- Infrastructure as Code -->
+                    <div class="skill-category p-6 rounded-lg bg-white dark:bg-gray-800 shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-primary-light dark:text-primary-dark">Infrastructure as Code</h3>
+                        <ul class="space-y-2">
+                            <li>Terraform</li>
+                            <li>Ansible</li>
+                            <li>CloudFormation</li>
+                        </ul>
+                    </div>
+
+                    <!-- Monitoring & Logging -->
+                    <div class="skill-category p-6 rounded-lg bg-white dark:bg-gray-800 shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-primary-light dark:text-primary-dark">Monitoring & Logging</h3>
+                        <ul class="space-y-2">
+                            <li>Prometheus</li>
+                            <li>Grafana</li>
+                        </ul>
+                    </div>
+
+                    <!-- Scripting Languages -->
+                    <div class="skill-category p-6 rounded-lg bg-white dark:bg-gray-800 shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-primary-light dark:text-primary-dark">Scripting Languages</h3>
+                        <ul class="space-y-2">
+                            <li>Bash</li>
+                            <li>Python</li>
+                            <li>PowerShell</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section py-20 px-6 bg-gray-100 dark:bg-gray-800">
+            <div class="container mx-auto max-w-4xl">
+                <h2 class="text-3xl font-bold mb-12 text-center">Get In Touch</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <form id="contact-form" class="space-y-6">
+                            <div>
+                                <label for="name" class="block mb-2 font-medium">Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-primary-light dark:focus:border-primary-dark">
+                            </div>
+                            <div>
+                                <label for="email" class="block mb-2 font-medium">Email</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-primary-light dark:focus:border-primary-dark">
+                            </div>
+                            <div>
+                                <label for="message" class="block mb-2 font-medium">Message</label>
+                                <textarea id="message" rows="5" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-primary-light dark:focus:border-primary-dark"></textarea>
+                            </div>
+                            <button type="submit" class="bg-primary-light dark:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity w-full">Send Message</button>
+                        </form>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h3 class="text-xl font-semibold mb-6">Connect with me</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-medium">Email:</p>
+                                <a href="mailto:devops@example.com" class="text-primary-light dark:text-primary-dark hover:underline">devops@example.com</a>
+                            </div>
+                            <div>
+                                <p class="font-medium">GitHub:</p>
+                                <a href="https://github.com/devopsengineer" target="_blank" class="text-primary-light dark:text-primary-dark hover:underline">github.com/devopsengineer</a>
+                            </div>
+                            <div>
+                                <p class="font-medium">LinkedIn:</p>
+                                <a href="https://linkedin.com/in/devopsengineer" target="_blank" class="text-primary-light dark:text-primary-dark hover:underline">linkedin.com/in/devopsengineer</a>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="font-medium mb-2">Availability</h4>
+                            <p>I'm currently open to new opportunities and would love to discuss how I can contribute to your team.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 dark:bg-gray-700 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; <span id="year"></span> DevOps Engineer Portfolio. All rights reserved.</p>
+            <p class="mt-2">Built with ♥ and Infrastructure as Code</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('light-icon');
+        const darkIcon = document.getElementById('dark-icon');
+        
+        // Check for saved user preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            darkIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            lightIcon.classList.remove('hidden');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            // Toggle icons
+            lightIcon.classList.toggle('hidden');
+            darkIcon.classList.toggle('hidden');
+            
+            // Toggle theme
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Form submission
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would typically send the form data to a server
+            console.log('Form submitted:', { name, email, message });
+            
+            // Show success message
+            alert('Thank you for your message! I will get back to you soon.');
+            contactForm.reset();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                    
+                    // Scroll to target
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
