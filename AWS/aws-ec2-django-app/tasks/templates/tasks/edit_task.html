@@ -1,0 +1,23 @@
+{% extends 'tasks/base.html' %}
+{% block content %}
+<h2>Edit Task #{{ task_id }}</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="title" class="form-label">Task Title</label>
+    <input type="text" class="form-control" id="title" value="Sample Title">
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="form-control" id="description" rows="3">Sample task description...</textarea>
+  </div>
+  <div class="mb-3">
+    <label for="status" class="form-label">Status</label>
+    <select class="form-select" id="status">
+      <option>Pending</option>
+      <option>Done</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-success">Update Task</button>
+</form>
+{% endblock %}

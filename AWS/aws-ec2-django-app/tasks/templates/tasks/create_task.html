@@ -1,0 +1,24 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+<h2>Create New Task</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="title" class="form-label">Task Title</label>
+    <input type="text" class="form-control" id="title" name="title" placeholder="Enter task title" required>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter task details"></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="status" class="form-label">Status</label>
+    <select class="form-select" id="status" name="status">
+      <option value="Pending">Pending</option>
+      <option value="Done">Done</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Create Task</button>
+</form>
+{% endblock %}
