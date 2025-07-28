@@ -186,7 +186,7 @@ EXPOSE 80
 Your website is live at:
 
 ```
-http://<your-ec2-ip>:8001
+http://<your-ec2-ip>:8001 (template taken from free resources)
 ```
 
  Fully automated  
