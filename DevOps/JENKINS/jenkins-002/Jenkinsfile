@@ -2,21 +2,21 @@ pipeline {
 	agent any 
 		stages {
 			stage('Build') {
-				step {
+				steps {
 					echo 'Building the Project......'
 					sh 'ls -l'
 			}
 		}
 			stage('Test') {
-				step {
+				steps {
 					echo 'Testing the Project......'
 					sh 'cat index.html'
 			}
 		}
 			stage('Deploy'){
-				step {
+				steps {
 					echo 'Deploying the Project......'
-					sh 'echo "Deployed the project Successfully'			}
+					sh 'echo "Deployed the project Successfully"'			}
 			}
 		}
 	}
