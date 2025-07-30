@@ -1,0 +1,23 @@
+pipeline {
+	agent any {
+		stages {
+			stage('Build') {
+				echo 'Building the Project......'
+				sh 'ls -l'
+			}
+		}
+		
+		stages {
+			stage('Test') {
+				echo 'Testing the Project......'
+				sh 'cat index.html'
+			}
+		}
+
+		stages {
+			stage('Deploy'){
+				echo 'Deploying the Project......'
+				sh 'echo "Deployed the project Successfully'			}
+		}
+	}
+}
