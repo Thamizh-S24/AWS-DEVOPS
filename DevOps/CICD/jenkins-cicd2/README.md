@@ -1,201 +1,132 @@
-#  Jenkins CI/CD Pipeline with github webhook on AWS EC2
+#  Static Website Deployment using GitHub Actions, Docker, and EC2
+
+This project demonstrates how to deploy and update a static website hosted in a Docker container on an EC2 instance using GitHub Actions.
 
 ---
 
+##  Step-by-Step CI/CD Workflow
 
-##  1. Launch EC2 Ubuntu Instance (AWS)
+###  1. Clone This Repository
 
-1. Go to AWS EC2 → Launch Instance
-2. Choose: **Ubuntu 22.04 LTS**
-3. Instance type: **t2.micro**
-4. Add 1 security group rule:
-   - **Port 22** (SSH)
-   - **Port 8080** (for Jenkins)
-   - **Port 8001** (for your website)
-5. Create key pair & launch
+This repository contains:
+- Static website files (e.g., `index.html`)
+- A `Dockerfile` for Nginx
 
----
-
-##  2. Connect to EC2 using MobaXterm
-
-1. Open MobaXterm
-2. Session → SSH → Enter **public IPv4 address**
-3. Username: `ubuntu`
-4. Use your `.pem` key to connect
-
----
-
-##  3. Install Jenkins on EC2
 
 ```bash
-sudo apt update
-sudo apt upgrade
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | \
-sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-
-sudo apt update
-sudo apt install jenkins -y
+git clone https://github.com/Thamizh-S24/AWS-DEVOPS.git
+cd AWS-DEVOPS
 ```
 
 ---
 
-##  4. Enable and Start Jenkins
+###  2. Create GitHub Actions Workflow
+
+Create a file at the **root of the repository**:
+
+```
+.github/workflows/deploy.yml
+```
+
+Paste the following content:
+
+```yaml
+name: Deploy Static Site to EC2 via Docker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH Key
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
+      - name: Deploy to EC2 with Docker
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            rm -rf AWS-DEVOPS
+            git clone https://github.com/git-username/repo-name.git
+            cd path/to/your/project/directory
+            docker stop static-container || true
+            docker rm static-container || true
+            docker build --no-cache -t static-image .
+            docker run -d --name static-container -p 8082:80 static-image (Expose this port in security group)
+          EOF
+```
+
+---
+
+###  3. Configure GitHub Secrets
+
+In your GitHub repo:
+- Go to **Settings → Secrets → Actions**
+- Add the following:
+
+ Secret Name      Value (Example)                      
+
+ `EC2_HOST`       Your EC2 public IP (e.g., 13.234.1.1)
+ `EC2_USER`       EC2 username (e.g., `ubuntu`)        
+ `EC2_SSH_KEY`    Your private SSH key (.pem content)  
+
+---
+
+###  4. Make Changes and Push
+
+Once workflow is set:
 
 ```bash
-sudo systemctl start jenkins
-sudo systemctl enable jenkins
+# Make changes in index.html 
+git add .
+git commit -m "Update website content"
+git push origin main
 ```
 
 ---
 
-##  5. Open Jenkins in Browser
+##  What Happens next?
 
-- Visit: `http://<EC2_Public_IP>:8080`
-- Find the Jenkins admin password:
-  ```bash
-  sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-  ```
-- Paste it into the browser
-- Install **suggested plugins**
-- Create admin user
+- GitHub Actions workflow triggers on push to `main`
+- It SSHes into your EC2 instance
+- Pulls the latest code from GitHub
+- Rebuilds the Docker image
+- Restarts the container on port `8082`
 
 ---
 
-##  6. Set Up Jenkins Job to Build Static Website from GitHub
+###  Website Live!
 
-###  Create a Freestyle Project
+Access your deployed site at:
 
-1. Jenkins Dashboard → New Item → **Freestyle project**
-2. Name: `static-cicd`
+```
+http://<your-ec2-public-ip>:8082
+```
 
-### 🔗 Connect GitHub Repo
+---
 
-1. Source Code Management → Git
-2. Repo URL:
-   ```
-   https://github.com/<your-username>/<your-repo>.git
-   ```
-3. Branch: `*/main`
+###  Want to Update Again?
 
-###  Add Build Step (Execute Shell)
-
+1. Modify your static files (e.g., `index.html`)
+2. Commit and push changes:
 ```bash
-echo "📁 Navigating to project directory..."
-cd DevOps/CICD/jenkins-cicd1
-
-echo "🧹 Cleaning up old container (if exists)..."
-docker rm -f static-site-container || true
-
-echo "🐳 Building Docker image..."
-docker build -t static-site-image .
-
-echo "🚀 Running container on port 8001..."
-docker run -d -p 8001:80 --name static-site-container static-site-image
-
-echo "✅ Deployment complete. Access your site at: http://<your-ec2-ip>:8001"
+git add .
+git commit -m "More changes to website"
+git push origin main
 ```
 
----
+ Your website will be updated automatically via the same workflow.
 
-##  7. Setup GitHub Webhook
-
-1. GitHub → Repo → Settings → Webhooks
-2. Add Webhook:
-   - Payload URL: `http://<your-ec2-ip>:8080/github-webhook/`
-   - Content type: `application/json`
-   - Trigger: Push events only
-
----
-
-##  8. Check the Website
-
-Visit:
-```
-http://<your-ec2-ip>:8001
-```
-
----
-
-##  9. Fix Docker Permission Error in Jenkins
-
-### 🧨 Error:
-Jenkins can’t run Docker commands.
-
-###  Solution:
-Install Docker and allow Jenkins to use it.
-
-```bash
-# Install Docker
-sudo apt install docker.io -y
-
-# Add Jenkins to Docker group
-sudo usermod -aG docker jenkins
-sudo systemctl restart jenkins
-```
-
----
-
-##  10. Make Code Change & Push
-
-1. Edit `index.html`
-2. Commit & push to GitHub
-   ```bash
-   git add .
-   git commit -m "updated website"
-   git push
-   ```
-
-> Webhook triggers Jenkins → Docker image rebuilt → Container updated
-
----
-
-##  11. Fix Dockerfile Not Found Error
-
-If you see:
-
-```
-unable to evaluate symlinks in Dockerfile path: no such file or directory
-```
-
-###  Solution:
-- Create a file named `Dockerfile` in your project root directory
-- Paste this:
-
-```Dockerfile
-FROM nginx:alpine
-RUN rm -rf /usr/share/nginx/html/*
-COPY . /usr/share/nginx/html
-EXPOSE 80
-```
-
-- Push it:
-  ```bash
-  git add Dockerfile
-  git commit -m "added Dockerfile"
-  git push
-  ```
-
-> Jenkins webhook triggers → Build runs again → Container created → Site deployed 🎉
-
----
-
-##  Final Result
-
-Your website is live at:
-
-```
-http://<your-ec2-ip>:8001 (template taken from free resources)
-```
-
- Fully automated  
- CI/CD with GitHub + Jenkins + Docker  
- 
 ---
 
 ## 🙋‍♂️ Author
 
 **Thamizharasan S** – DevOps Engineer
-
----
