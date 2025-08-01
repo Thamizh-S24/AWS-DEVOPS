@@ -26,5 +26,5 @@ jobs:
             docker stop static-container || true
             docker rm static-container || true
             docker build -t static-image .
-            docker run -d --name static-container -p 80:80 static-image
+            docker run -d --name static-container -p 8030:80 static-image
           EOF
