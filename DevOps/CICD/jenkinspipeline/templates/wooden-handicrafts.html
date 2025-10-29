@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light" data-pwa="true">
+
+<head>
+  <meta charset="utf-8">
+
+  <!-- Viewport -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+
+  <!-- SEO Meta Tags -->
+  <title>Yo-La Handicrafts | Wooden Handicraft</title>
+  <meta name="description"
+    content="Discover authentic, eco-friendly handcrafted products made by skilled Indian artisans. Unique wooden, pottery, and handmade decor for your home.">
+  <meta name="keywords"
+    content="Yo-La Handicraft, Yo La, Yo La Handicraft, Yo La Handicraft, home dècor, furniture store, furniture in store, furniture superstores, shop, Shop, Yo La handicraft, YoLahandicrafts, YO-LA">
+  <meta name="author" content="Yo-La Handicrafts">
+
+  <!-- Webmanifest + Favicon / App icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json')}}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/app-icons/app-icon.png')}}" sizes="32x32">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='assets/img/new-logo.png')}}">
+
+  <!-- Theme switcher (color modes) -->
+  <script src="{{ url_for('static', filename='assets/js/theme-switcher.js')}}"></script>
+
+  <!-- Preloaded local web font (Inter) -->
+  <link rel="preload" href="{{ url_for('static', filename='assets/fonts/inter-variable-latin.woff2')}}" as="font" type="font/woff2" crossorigin>
+
+  <!-- Font icons -->
+  <link rel="preload" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.woff2')}}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.min.css')}}">
+
+  <!-- Vendor styles -->
+   
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/choices.js/public/assets/styles/choices.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/nouislider/dist/nouislider.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/simplebar/dist/simplebar.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/glightbox/dist/css/glightbox.min.css')}}">
+
+  <!-- Bootstrap + Theme styles -->
+  <link rel="preload" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" as="style">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" id="theme-styles">
+</head>
+
+
+<!-- Body -->
+
+<body>
+
+  <!-- Topbar -->
+  <div class="container position-relative d-flex justify-content-between z-1 py-2">
+    <div class="nav animate-underline">
+      <span class="text-secondary-emphasis fs-xs me-1">Contact us <span class="d-none d-sm-inline">24/7</span></span>
+      <a class="nav-link animate-target fs-xs fw-semibold p-0" href="tel:+919876543210">(+91)&nbsp;98765&nbsp;43210</a>
+    </div>
+    <a class="text-secondary-emphasis fs-xs text-decoration-none d-none d-md-inline" href="{{ url_for('wooden_handicrafts') }}">"Thank you for choosing Us"</a>
+  </div>
+
+  <!-- Navigation bar (Page header) -->
+  <header class="navbar-sticky sticky-top container z-fixed px-2" data-sticky-element>
+    <div class="navbar navbar-expand-lg flex-nowrap bg-body rounded-pill shadow ps-0 mx-1">
+      <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark rounded-pill z-0 d-none d-block-dark"></div>
+
+      <!-- Mobile offcanvas menu toggler (Hamburger) -->
+      <button type="button" class="navbar-toggler ms-3" data-bs-toggle="offcanvas" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar brand (Logo) -->
+      <a class="navbar-brand position-relative z-1 ms-4 ms-sm-5 ms-lg-4 me-2 me-sm-0 me-lg-3 logo" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='assets/app-icons/app-icon.png') }}" id="logo" alt="Logo" style="max-height:40px; width:auto;">
+      </a>
+
+      <!-- Main navigation that turns into offcanvas on screens < 992px wide (lg breakpoint) -->
+      <nav class="offcanvas offcanvas-start" id="navbarNav" tabindex="-1" aria-labelledby="navbarNavLabel">
+        <div class="offcanvas-header py-3">
+          <h5 class="offcanvas-title" id="navbarNavLabel">Browse Categories</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-3 pb-4 py-lg-0 mx-lg-auto">
+          <ul class="navbar-nav position-relative">
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('index') }}" role="button" data-bs-trigger="hover"
+                aria-expanded="false">Home</a>
+            </li>
+
+            </li>
+            <li class="nav-item dropdown position-static me-lg-n1 me-xl-0">
+              <a class="nav-link dropdown-toggle" aria-current="page" href="{{ url_for('shop') }}" role="button"
+                data-bs-toggle="dropdown" data-bs-trigger="hover" aria-expanded="false">Shop</a>
+              <div class="dropdown-menu rounded-4 p-4">
+                <div class="d-flex flex-column flex-lg-row gap-4">
+                  <div style="min-width: 190px">
+                    <div class="h6 mb-2" href="{{ url_for('shop') }}">Store categorie</div>
+                    <ul class="nav flex-column gap-2 mt-0">
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('assorted_craft') }}">Assorted Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('blue_pottery') }}">blue Pottery</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('brass_craft') }}">Brass Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('crystal_craft') }}">Crystal Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('furniture') }}">Furniture</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('marble_handicrafts') }}">Marble Handicraft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('metal_craft') }}">Metal Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('painting') }}">Painting</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0 active"
+                          href="{{ url_for('wooden_handicrafts') }}">Wooden Handicraft</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('about') }}" role="button" data-bs-trigger="hover"
+                data-bs-auto-close="outside" aria-expanded="false">About</a>
+            </li>
+
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('contact') }}" role="button" data-bs-trigger="hover"
+                data-bs-auto-close="outside" aria-expanded="false">Contact</a>
+            </li>
+            <li class="nav-item me-lg-n1 me-xl-0">
+        <a class="nav-link fs-sm d-flex align-items-center" href="{{ url_for('cart') }}">
+  <i class="bi bi-cart3 me-1"></i> Cart
+  <span id="cart-count" class="badge bg-danger ms-1">
+    {{ session.get('cart')|map(attribute='qty')|sum if session.get('cart') else 0 }}
+  </span>
+</a>
+      </li>
+
+          </ul>
+          <li class="nav-item dropdown d-flex align-items-center ms-3">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false" style="padding-top:0; padding-bottom:0;">
+              <img src="{{ url_for('static', filename='assets/img/user-icon.png') }}" 
+                  alt="profile"
+                  class="rounded-circle me-2" 
+                  style="width:24px; height:24px; object-fit:cover;">
+              <span style="font-size: 0.9rem;">{{ session['user'] }}</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+
+        </div>
+      </nav>
+
+      <!-- Button group -->
+      <div class="d-flex gap-sm-1 position-relative z-1">
+
+        <!-- Theme switcher (light/dark/auto) -->
+        <div class="dropdown">
+          <button type="button"
+            class="theme-switcher btn btn-icon btn-outline-secondary fs-lg border-0 rounded-circle animate-scale"
+            data-bs-toggle="dropdown" data-bs-display="dynamic" aria-expanded="false" aria-label="Toggle theme (light)">
+            <span class="theme-icon-active d-flex animate-target">
+              <i class="ci-sun"></i>
+            </span>
+          </button>
+          <ul class="dropdown-menu start-50 translate-middle-x"
+            style="--cz-dropdown-min-width: 9rem; --cz-dropdown-spacer: 1rem">
+            <li>
+              <button type="button" class="dropdown-item active" data-bs-theme-value="light" aria-pressed="true">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-sun"></i>
+                </span>
+                <span class="theme-label">Light</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item" data-bs-theme-value="dark" aria-pressed="false">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-moon"></i>
+                </span>
+                <span class="theme-label">Dark</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item" data-bs-theme-value="auto" aria-pressed="false">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-auto"></i>
+                </span>
+                <span class="theme-label">Auto</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </header><br><br>
+
+
+  <!-- Page content -->
+  <main class="content-wrapper">
+    <div class="container pb-5 mb-2 mb-sm-3 mb-lg-4 mb-xl-5">
+
+      <!-- Breadcrumb -->
+      <nav class="position-relative pt-3 my-3 my-md-4" aria-label="breadcrumb" style="z-index: 1021">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{{ url_for('shop') }}">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Wooden Handicraft Catalog</li>
+        </ol>
+      </nav>
+
+      <!-- Page title -->
+      <h1 class="h3 position-relative pb-sm-2 pb-md-3" style="z-index: 1021">Wooden Handicraft</h1>
+
+      <!-- Product carousel -->
+      <div class="position-relative pb-xxl-3">
+
+        <!-- Slider -->
+        <div class="swiper pt-3 pt-sm-4" data-swiper='{
+        "slidesPerView": 2,
+        "spaceBetween": 24,
+        "loop": true,
+        "navigation": {
+          "prevEl": ".popular-prev",
+          "nextEl": ".popular-next"
+        },
+        "breakpoints": {
+          "768": {
+            "slidesPerView": 3
+          },
+          "992": {
+            "slidesPerView": 4
+          }
+        }
+      }'>
+          <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 gy-5" id="shopGalleryContainer">
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Preview Modal -->
+      <div id="imgPopupModal" class="modal">
+        <div class="modal_body">
+          <span class="modalCloseBtn">&times;</span>
+          <div class="modal-content">
+            <img class="" id="popupFullImage">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Page footer -->
+  <footer class="footer bg-dark pb-4 py-lg-5" data-bs-theme="dark">
+    <div class="container pt-5 pt-lg-4 mt-sm-2 mt-md-3">
+      <div class="row pb-5">
+
+        <!-- Subscription + Social account links -->
+        <div class="col-md col-xl-8 order-md-2">
+          <div class="text-center px-sm-0 mx-auto" style="max-width: 568px">
+            <img src="{{ url_for('static', filename='assets/img/new-logo.png')}}" id="logo">
+          </div>
+        </div>
+
+        <!-- Category links -->
+        <div class="col-md-auto col-xl-2 text-center order-md-1 pt-4 pt-md-0">
+          <ul class="nav d-inline-flex flex-md-column justify-content-center align-items-center gap-md-2">
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('assorted_craft') }}">Assorted
+                Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('blue_pottery') }}">blue Pottery</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('brass_craft') }}">Brass Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('crystal_craft') }}">Crystal Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('furniture') }}">Furniture</a>
+            </li>
+            
+          </ul>
+        </div>
+
+        <!-- Customer links -->
+        <div class="col-md-auto col-xl-2 text-center order-md-3 pt-3 pt-md-0">
+          <ul class="nav d-inline-flex flex-md-column justify-content-center align-items-center gap-md-2">
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('marble_handicrafts') }}">Marble
+                Handicraft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('metal_craft') }}">Metal Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('painting') }}">Painting</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('wooden_handicrafts') }}">Wooden
+                Handicraft</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <p class="fs-xs copyrights text-center pt-lg-4 mt-n2 mt-md-0 mb-0">
+        &copy; 2025 Yo-La Handicrafts. All rights reserved.</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Vendor scripts -->
+  <script src="{{ url_for('static', filename='assets/vendor/choices.js/public/assets/scripts/choices.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/nouislider/dist/nouislider.min.js')}}"></script>
+
+  <script src="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js')}}')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/simplebar/dist/simplebar.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/glightbox/dist/js/glightbox.min.js')}}"></script>
+
+  <!-- Bootstrap + Theme scripts -->
+  <script src="{{ url_for('static', filename='assets/js/theme.min.js')}}"></script>
+
+  <script>
+    const Domane = window.location.host;
+    console.log(Domane, 'domain');
+
+    const baseUrl = `{{ url_for('static', filename='assets/img') }}/shop/wooden-handicraft`;
+    
+    // Products Home
+    const shopProducts = [
+      { name: "Ashok Stambh Hand Carved Wooden Sculpture", image: `${baseUrl}/ashok-stambh-hand-carved-wooden-sculpture.jpg`,price: 1200 },
+      { name: "Babasaheb Ambedkar Hand Carved Wooden Statue", image: `${baseUrl}/babasaheb-ambedkar-hand-carved-wooden-statue.jpg` ,price: 1200},
+      { name: "Beautiful Hand Carved Elephant Sculpture", image: `${baseUrl}/beautiful-hand-carved-elephant-sculpture.jpg` ,price: 1200},
+      { name: "Beautiful Hand Painted Camel Wooden Sculpture", image: `${baseUrl}/beautiful-hand-painted-camel-wooden-sculpture.jpg`,price: 1200 },
+      { name: "Colorful Wise Owl Wooden Craft", image: `${baseUrl}/colorful-wise-owl-wooden-craft.jpg` ,price: 1200},
+      { name: "Dr. S Radhakrishnan Hand Carved Wooden Statue", image: `${baseUrl}/dr-s-radhakrishnan-hand-carved-wooden-statue.jpg`,price: 1200 },
+      { name: "Elephant Trunk up Hand Painted Wooden Statue", image: `${baseUrl}/elephant-trunk-up-hand-painted-wooden-statue.jpg`,price: 1200 },
+      { name: "Elephant Undercut Wooden Sculpture 2", image: `${baseUrl}/elephant-undercut-wooden-sculpture-2.jpg`,price: 1200},
+      { name: "Elephant Undercut Wooden Sculpture 3", image: `${baseUrl}/elephant-undercut-wooden-sculpture-3.jpg` ,price: 1200},
+      { name: "Elephant Undercut Wooden Sculpture", image: `${baseUrl}/elephant-undercut-wooden-sculpture.jpg` ,price: 1200},
+      { name: "God Buddha Figurine Wooden Handicraft", image: `${baseUrl}/god-buddha-figurine-wooden-handicraft.jpg` ,price: 1200},
+      { name: "Hand Carved Hand Carved Bull Statue", image: `${baseUrl}/hand-carved-bull-statue.jpg` ,price: 1200},
+      { name: "Hand Carved Elephant Trunk up Ambari 15 Inches", image: `${baseUrl}/hand-carved-elephant-trunk-up-ambari-15-inches.jpg`,price: 1200 },
+      { name: "Hand Carved Lord Buddha Statue Wooden Handicraft", image: `${baseUrl}/hand-carved-lord-buddha-statue-wooden-handicraft.jpg`,price: 1200 },
+      { name: "Hand Carved Sitting Buddha Wooden Figurine", image: `${baseUrl}/hand-carved-sitting-buddha-wooden-figurine.jpg` ,price: 1200},
+      { name: "Hand Carved Three Monkey Statue Wooden Handicraft", image: `${baseUrl}/hand-carved-three-monkey-statue-wooden-handicraft.jpg`,price: 1200 },
+      { name: "Hand Carved Wooden Ashok Stambh With Watch", image: `${baseUrl}/hand-carved-wooden-ashok-stambh-with-watch.jpg`,price: 1200 },
+      { name: "Hand Carved Wooden Figurine of God Hanuman", image: `${baseUrl}/hand-carved-wooden-figurine-of-god-hanuman.jpg`,price: 1200 },
+      { name: "Hand Carved Wooden figurine of natraj", image: `${baseUrl}/hand-carved-wooden-figurine-of-natraj.jpg` ,price: 1200},
+      { name: "Hand Carved Wooden Flower Vase", image: `${baseUrl}/hand-carved-wooden-flower-vase.jpg` ,price: 1200},
+      { name: "Hand Carved Wooden Ganesh Statue Wooden Handicraft", image: `${baseUrl}/hand-carved-wooden-ganesh-statue-wooden-handicraft.jpg` ,price: 1200},
+      { name: "Hand Carved Wooden Sculptures of Camel", image: `${baseUrl}/hand-carved-wooden-sculptures-of-camel.jpg` ,price: 1200},
+      { name: "Hand Painted Elephant Kadam Cood Craft", image: `${baseUrl}/hand-painted-elephant-kadam-cood-craft.jpg` ,price: 1200},
+      { name: "Hand Painted Elephant Wooden Craft 2", image: `${baseUrl}/hand-painted-elephant-wooden-Craft-2.jpg` ,price: 1200},
+      { name: "Hand Painted Elephant Wooden Craft set of 3", image: `${baseUrl}/hand-painted-elephant-wooden-craft-set-of-3.jpg`,price: 1200 },
+      { name: "Hand Painted Elephant Wooden Craft", image: `${baseUrl}/hand-painted-elephant-wooden-craft.jpg`,price: 1200 },
+      { name: "Hand Painted Wooden Camel Statue", image: `${baseUrl}/hand-painted-wooden-camel-statue.jpg` ,price: 1200},
+      { name: "Hand Painted Wooden Rajasthani Darban Gatekeeper Statue", image: `${baseUrl}/hand-painted-wooden-rajasthani-darban-gatekeeper-statue.jpg` ,price: 1200},
+      { name: "Handcrafted Assorted key Chain Pack of 50", image: `${baseUrl}/handcrafted-assorted-key-chain-pack-of-50.jpg`,price: 1200},
+      { name: "Handcrafted Bead Work Elephant", image: `${baseUrl}/handcrafted-bead-work-elephant.jpg`,price: 1200 },
+      { name: "Handcrafted Elephant Ambari", image: `${baseUrl}/handcrafted-elephant-ambari.jpg`,price: 1200 },
+      { name: "Handcrafted Lord Ganesh Figurine", image: `${baseUrl}/handcrafted-lord-ganesh-figurine.jpg`,price: 1200 },
+      { name: "Handcrafted Musicians set of 4", image: `${baseUrl}/handcrafted-musicians-set-of-4.jpg`,price: 1200 },
+      { name: "Handcrafted Rhinoceros Wooden Sculpture", image: `${baseUrl}/handcrafted-rhinoceros-wooden-sculpture.jpg` ,price: 1200},
+      { name: "Handcrafted Wooden Pen Stand with Ganesh Figurine", image: `${baseUrl}/handcrafted-wooden-pen-stand-with-ganesh-figurine.jpg` ,price: 1200},
+      { name: "Handmade Kadam Wood Elephant Ambari", image: `${baseUrl}/handmade-kadam-wood-elephant-ambari.jpg` ,price: 1200},
+      { name: "Handmade Lord Buddha Figurine", image: `${baseUrl}/handmade-lord-buddha-figurine.jpg`,price: 1200},
+      { name: "Handmade Wooden Figurines of Owls", image: `${baseUrl}/handmade-wooden-figurines-of-owls.jpg` ,price: 1200},
+      { name: "Handmade Wooden Owl Statue", image: `${baseUrl}/handmade-wooden-owl-statue.jpg` ,price: 1200},
+      { name: "Handmade Wooden Serving Tray", image: `${baseUrl}/handmade-wooden-serving-tray.jpg`,price: 1200 },
+      { name: "Handpainted Wooden Elephant Sculpture The Gaja", image: `${baseUrl}/handpainted-wooden-elephant-sculpture-the-gaja.jpg`,price: 1200 },
+      { name: "Horse Undercut Wooden Sculpture 2", image: `${baseUrl}/horse-undercut-wooden-sculpture-2.jpg`,price: 1200 },
+      { name: "Horse Undercut Wooden Sculpture", image: `${baseUrl}/horse-undercut-wooden-sculpture.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Ambabari Elephant", image: `${baseUrl}/kadam-wood-handcrafted-ambabari-elephant.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Handcrafted Ashok Stambh", image: `${baseUrl}/kadam-wood-handcrafted-ashok-stambh.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Birds Figurine", image: `${baseUrl}/kadam-wood-handcrafted-birds-figurine.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Camel Red", image: `${baseUrl}/kadam-wood-handcrafted-camel-red.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Camel", image: `${baseUrl}/kadam-wood-handcrafted-camel.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Dancing Elephant", image: `${baseUrl}/kadam-wood-handcrafted-dancing-elephant.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Elephant Candle Stand", image: `${baseUrl}/kadam-wood-handcrafted-elephant-candle-stand.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Elephant Decorative Piece", image: `${baseUrl}/kadam-wood-handcrafted-elephant-decorative-piece.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Elephant", image: `${baseUrl}/kadam-wood-handcrafted-elephant.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Idol", image: `${baseUrl}/kadam-wood-handcrafted-idol.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Lord Buddha 12", image: `${baseUrl}/kadam-wood-handcrafted-lord-buddha-12.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Lord Buddha Figurine", image: `${baseUrl}/kadam-wood-handcrafted-lord-buddha-figurine.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Lord Ganesha 8", image: `${baseUrl}/kadam-wood-handcrafted-lord-ganesha-8.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Lord Ganesha", image: `${baseUrl}/kadam-wood-handcrafted-lord-ganesha.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Owl Statue", image: `${baseUrl}/kadam-wood-handcrafted-owl-statue.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Pen Stand 2", image: `${baseUrl}/kadam-wood-handcrafted-pen-stand-2.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Pen Stand", image: `${baseUrl}/kadam-wood-handcrafted-pen-stand.jpg` ,price: 1200},
+      { name: "Kadam Wood Handcrafted Undercut Birds Figurine", image: `${baseUrl}/kadam-wood-handcrafted-undercut-birds-figurine.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Undercut Owl Figurine", image: `${baseUrl}/kadam-wood-handcrafted-undercut-owl-figurine.jpg`,price: 1200},
+      { name: "Kadam Wood Handcrafted Watch Pen Stand", image: `${baseUrl}/kadam-wood-handcrafted-watch-pen-stand.jpg`,price: 1200 },
+      { name: "Kadam Wood Handcrafted Lion Statue", image: `${baseUrl}/kadam-wood-lion-statue.jpg` ,price: 1200},
+      { name: "Kadam Wood Handicraft Sculpture Beautiful Hand Carved Horse 2", image: `${baseUrl}/kadam-wood-sculpture-beautiful-hand-carved-horse-2.jpg`,price: 1200 },
+      { name: "Kadam Wood Handicraft Sculpture Beautiful Hand Carved Horse", image: `${baseUrl}/kadam-wood-sculpture-beautiful-hand-carved-horse.jpg`,price: 1200 },
+      { name: "Laughing Buddha BUDAI Wooden Craft", image: `${baseUrl}/laughing-Buddha-BUDAI-wooden-craft.jpg` ,price: 1200},
+      { name: "Laughing Buddha Statue Wooden Craft", image: `${baseUrl}/laughing-buddha-statue-wooden-handicraft.jpg` ,price: 1200},
+      { name: "Laughing Buddha Wooden Handmade Sculpture", image: `${baseUrl}/laughing-buddha-wooden-handmade-sculpture.jpg`,price: 1200 },
+      { name: "Lord Buddha Figurine Wooden Handicraft", image: `${baseUrl}/lord-buddha-figurine-wooden-handicraft.jpg` ,price: 1200},
+      { name: "Lord Ganesh Kadam Wood Murti", image: `${baseUrl}/lord-ganesh-kadam-wood-murti.jpg`,price: 1200 },
+      { name: "Lord Ganesha Figurine Wooden Handicraft", image: `${baseUrl}/lord-ganesha-figurine-wooden-handicraft.jpg`,price: 1200 },
+      { name: "Lord Sculpture Wooden Handicraft", image: `${baseUrl}/lord-ganesha-sculpture-wooden-handicraft.jpg`,price: 1200 },
+      { name: "Lord Krishna Figurine Hand Carved Wooden Craft", image: `${baseUrl}/lord-krishna-figurine-hand-carved-wooden-craft.jpg`,price: 1200 },
+      { name: "Lordg Ganesh Kadam Wood Murt", image: `${baseUrl}/lordg-ganesh-kadam-wood-murt.jpg`,price: 1200 },
+      { name: "Maharaja Hand Carved Wooden Statue", image: `${baseUrl}/maharaja-hand-carved-wooden-statue.jpg`,price: 1200 },
+      { name: "Maharana Pratap Hand Carved Wooden Statue", image: `${baseUrl}/maharana-pratap-hand-carved-wooden-statue.jpg` ,price: 1200},
+      { name: "Maharana Gandhi Hand Carved Wooden Statue", image: `${baseUrl}/mahatma-gandhi-hand-carved-wooden-statue.jpg` ,price: 1200},
+      { name: "Maharana Saint Hand Carved Wooden Statue", image: `${baseUrl}/meditating-saint-hand-carved-wooden-statue.jpg`,price: 1200 },
+      { name: "Sardar Vallabhbhai Patel Hand Carved Wooden Statue", image: `${baseUrl}/sardar-vallabhbhai-patel-hand-carved-wooden-statue.jpg`,price: 1200 },
+      { name: "Wood Carved Camel Sculpture 6 Inch", image: `${baseUrl}/wood-carved-camel-sculpture-6-inch.jpg`,price: 1200 },
+      { name: "Wooden Antique Elephant Ambari", image: `${baseUrl}/wooden-antique-elephant-ambari.jpg`,price: 1200 },
+      { name: "Wooden Carved Camel Sculpture Ship of The Desert", image: `${baseUrl}/wooden-carved-camel-sculpture-ship-of-the-desert'.jpg`,price: 1200 },
+      { name: "Wooden Dinosaur Sculpture", image: `${baseUrl}/wooden-dinosaur-sculpture.jpg`,price: 1200 },
+      { name: "Wooden Figurine of Lord Ganesha", image: `${baseUrl}/wooden-figurine-of-lord-ganesha.jpg`,price: 1200 },
+      { name: "Wooden Figurine of Sai Baba", image: `${baseUrl}/wooden-figurine-of-sai-baba.jpg` ,price: 1200},
+      { name: "Wooden Ganesh Statue Wooden Handicraft", image: `${baseUrl}/wooden-ganesh-statue-wooden-handicraft.jpg` ,price: 1200},
+      { name: "Wooden Hand Carved Cow Statue 2", image: `${baseUrl}/wooden-hand-carved-cow-statue-2.jpg`,price: 1200 },
+      { name: "Wooden Hand Carved Cow Statue", image: `${baseUrl}/wooden-hand-carved-cow-statue.jpg`,price: 1200 },
+      { name: "Wooden Hand Carved Figurine of Lord Ganesha", image: `${baseUrl}/wooden-hand-carved-figurine-of-lord-ganesha.jpg` ,price: 1200},
+      { name: "Wooden Handicraft Rajasthani Design Coaster", image: `${baseUrl}/wooden-handcrafted-rajasthani-design-coaster.jpg` ,price: 1200},
+      { name: "Wooden Handicraft Rajasthani Design Pen Stand", image: `${baseUrl}/wooden-handcrafted-rajasthani-design-pen-stand.jpg`,price: 1200 },
+      { name: "Wooden Handicraft Buddha Figurine", image: `${baseUrl}/wooden-handicraft-buddha-figurine.jpg` ,price: 1200},
+      { name: "Wooden Handicraft Undercut Camel Statue", image: `${baseUrl}/wooden-handicraft-undercut-camel-statue.jpg` ,price: 1200}
+    ];
+
+    const shopGallery = document.getElementById('shopGalleryContainer');
+    const imgPopupModal = document.getElementById('imgPopupModal');
+    const popupImage = document.getElementById('popupFullImage');
+    const modalCloseBtn = document.getElementsByClassName('modalCloseBtn')[0];
+
+    shopProducts.forEach(item => {
+      const productCard = document.createElement('div');
+      // swiper-slide class remove kar diya gaya hai
+
+      productCard.innerHTML = `
+      <div class="animate-underline">
+        <img src="${item.image}" alt="${item.name}" class="productThumbnail rounded-4" style="cursor:pointer;"><br/><br/>
+        <h3 class="d-block fs-sm fw-medium text-truncate product_title">
+          <span class="animate-target">${item.name}</span>
+        </h3>
+        <br/>
+       <p class="product-price"><b>₹${item.price}</b></p>
+      <button class="btn btn-primary w-100 rounded-pill px-3 add-to-cart-btn"
+  data-name="${item.name}"
+  data-price="${item.price}"
+  data-image="${item.image}">  <!-- Add this -->
+  Add to Cart
+</button>
+
+
+
+      </div>
+    `;
+
+      // Image Click Event for Popup
+      productCard.querySelector('.productThumbnail').addEventListener('click', () => {
+        imgPopupModal.style.display = "block";
+        popupImage.src = item.image;
+      });
+
+      shopGallery.appendChild(productCard);
+    });
+// Add-to-cart click handler (AJAX)
+document.addEventListener('click', async (e) => {
+  if (e.target.classList.contains('add-to-cart-btn')) {
+    const name = e.target.dataset.name;
+    const price = e.target.dataset.price;
+    let image = e.target.dataset.image;
+
+    // 🔥 Fix: remove leading "/static/" if present
+    if (image && image.startsWith('/static/')) {
+      image = image.replace('/static/', '');
+    }
+
+    try {
+      const response = await fetch(`/add-to-cart/${encodeURIComponent(name)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ price: price, image: image })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert(result.message);
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) cartCountEl.textContent = result.cart_count;
+      } else {
+        alert('Failed to add item to cart.');
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Something went wrong.');
+    }
+  }
+});
+
+
+    // Close Modal on X Click
+    modalCloseBtn.onclick = () => {
+      imgPopupModal.style.display = "none";
+    };
+
+    // Close Modal on Outside Click
+    window.onclick = (event) => {
+      if (event.target == imgPopupModal) {
+        imgPopupModal.style.display = "none";
+      }
+    };
+  </script>
+
+</body>
+
+</html>

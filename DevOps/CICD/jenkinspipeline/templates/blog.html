@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light" data-pwa="true">
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+
+    <!-- SEO Meta Tags -->
+    <title>Yo-La Handicrafts | Blog</title>
+    <meta name="description"
+    content="Discover authentic, eco-friendly handcrafted products made by skilled Indian artisans. Unique wooden, pottery, and handmade decor for your home.">
+  <meta name="keywords"
+    content="Yo-La Handicraft, Yo La, Yo La Handicraft, Yo La Handicraft, home dècor, furniture store, furniture in store, furniture superstores, shop, Shop, Yo La handicraft, YoLahandicrafts, YO-LA">
+  <meta name="author" content="YO-LA Handicrafts">
+
+    <!-- Webmanifest + Favicon / App icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json')}}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/app-icons/app-icon.png')}}" sizes="32x32">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='assets/img/new-logo.png')}}" sizes="180x180">
+
+    <!-- Theme switcher (color modes) -->
+    <script src="{{ url_for('static', filename='assets/js/theme-switcher.js')}}"></script>
+
+    <!-- Preloaded local web font (Inter) -->
+    <link rel="preload" href="{{ url_for('static', filename='assets/fonts/inter-variable-latin.woff2')}}" as="font" type="font/woff2" crossorigin>
+
+    <!-- Font icons -->
+    <link rel="preload" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.woff2')}}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.min.css')}}">
+
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/simplebar/dist/simplebar.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/glightbox/dist/css/glightbox.min.css')}}">
+
+    <!-- Bootstrap + Theme styles -->
+    <link rel="preload" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" id="theme-styles">
+  </head>
+
+
+  <!-- Body -->
+  <body>
+
+    <!-- Topbar -->
+    <div class="container position-relative d-flex justify-content-between z-1 py-3">
+      <div class="nav animate-underline">
+        <span class="text-secondary-emphasis fs-xs me-1">Contact us <span class="d-none d-sm-inline">24/7</span></span>
+        <a class="nav-link animate-target fs-xs fw-semibold p-0" href="tel:+919876543210">(+91)&nbsp;98765&nbsp;43210</a>
+      </div>
+      <a class="text-secondary-emphasis fs-xs text-decoration-none d-none d-md-inline" href="{{ url_for('blog') }}">"Thank You for choosing Us"</a>
+      
+    </div>
+
+
+    <!-- Navigation bar (Page header) -->
+  <header class="navbar-sticky sticky-top container z-fixed px-2" data-sticky-element>
+    <div class="navbar navbar-expand-lg flex-nowrap bg-body rounded-pill shadow ps-0 mx-1">
+      <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark rounded-pill z-0 d-none d-block-dark"></div>
+
+      <!-- Mobile offcanvas menu toggler (Hamburger) -->
+      <button type="button" class="navbar-toggler ms-3" data-bs-toggle="offcanvas" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar brand (Logo) -->
+      <a class="navbar-brand position-relative z-1 ms-4 ms-sm-5 ms-lg-4 me-2 me-sm-0 me-lg-3 logo"
+        href="{{ url_for('index') }}">
+                        <img src="{{ url_for('static', filename='assets/app-icons/app-icon.png') }}" id="logo" alt="Logo" style="max-height:40px; width:auto;">
+
+    </a>
+
+      <!-- Main navigation that turns into offcanvas on screens < 992px wide (lg breakpoint) -->
+      <nav class="offcanvas offcanvas-start" id="navbarNav" tabindex="-1" aria-labelledby="navbarNavLabel">
+        <div class="offcanvas-header py-3">
+          <h5 class="offcanvas-title" id="navbarNavLabel">Browse Categories</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-3 pb-4 py-lg-0 mx-lg-auto">
+          <ul class="navbar-nav position-relative">
+            <li class="nav-item me-lg-n1 me-xl-0">
+             <a class="nav-link fs-sm" href="{{ url_for('index') }}" role="button" data-bs-trigger="hover"
+                aria-expanded="false">Home</a>
+            </li>
+            </li>
+            <li class="nav-item dropdown position-static me-lg-n1 me-xl-0">
+              <a class="nav-link dropdown-toggle" aria-current="page" href="{{ url_for('shop') }}" role="button"
+                data-bs-toggle="dropdown" data-bs-trigger="hover" aria-expanded="false">Shop</a>
+              <div class="dropdown-menu rounded-4 p-4">
+                <div class="d-flex flex-column flex-lg-row gap-4">
+                  <div style="min-width: 190px">
+                    <div class="h6 mb-2" href="{{ url_for('shop') }}">Store categorie</div>
+                    <ul class="nav flex-column gap-2 mt-0">
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('assorted_craft') }}">Assorted Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('blue_pottery') }}">blue Pottery</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('brass_craft') }}">Brass Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('crystal_craft') }}">Crystal Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('furniture') }}">Furniture</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('marble_handicrafts') }}">Marble Handicraft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('metal_craft') }}">Metal Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('painting') }}">Painting</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('wooden_handicrafts') }}">Wooden Handicraft</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('about') }}" role="button" data-bs-toggle="dropdown"
+                data-bs-trigger="hover" data-bs-auto-close="outside" aria-expanded="false">About</a>
+            </li>
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('contact') }}" role="button" data-bs-toggle="dropdown"
+                data-bs-trigger="hover" data-bs-auto-close="outside" aria-expanded="false">Contact</a>
+            </li>
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm active" href="{{ url_for('blog') }}" role="button" data-bs-toggle="dropdown"
+                data-bs-trigger="hover" data-bs-auto-close="outside" aria-expanded="false">Blog</a>
+            </li>
+            <li class="nav-item me-lg-n1 me-xl-0">
+        <a class="nav-link fs-sm d-flex align-items-center" href="{{ url_for('cart') }}">
+  <i class="bi bi-cart3 me-1"></i> Cart
+  <span id="cart-count" class="badge bg-danger ms-1">
+    {{ session.get('cart')|map(attribute='qty')|sum if session.get('cart') else 0 }}
+  </span>
+</a>
+      </li>
+          </ul>
+          <li class="nav-item dropdown d-flex align-items-center ms-3">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false" style="padding-top:0; padding-bottom:0;">
+              <img src="{{ url_for('static', filename='assets/img/user-icon.png') }}" 
+                  alt="profile"
+                  class="rounded-circle me-2" 
+                  style="width:24px; height:24px; object-fit:cover;">
+              <span style="font-size: 0.9rem;">{{ session['user'] }}</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+
+        </div>
+      </nav>
+
+      <!-- Button group -->
+      <div class="d-flex gap-sm-1 position-relative z-1">
+
+        <!-- Theme switcher (light/dark/auto) -->
+        <div class="dropdown">
+          <button type="button"
+            class="theme-switcher btn btn-icon btn-outline-secondary fs-lg border-0 rounded-circle animate-scale"
+            data-bs-toggle="dropdown" data-bs-display="dynamic" aria-expanded="false" aria-label="Toggle theme (light)">
+            <span class="theme-icon-active d-flex animate-target">
+              <i class="ci-sun"></i>
+            </span>
+          </button>
+          <ul class="dropdown-menu start-50 translate-middle-x"
+            style="--cz-dropdown-min-width: 9rem; --cz-dropdown-spacer: 1rem">
+            <li>
+              <button type="button" class="dropdown-item active" data-bs-theme-value="light" aria-pressed="true">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-sun"></i>
+                </span>
+                <span class="theme-label">Light</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item" data-bs-theme-value="dark" aria-pressed="false">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-moon"></i>
+                </span>
+                <span class="theme-label">Dark</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item" data-bs-theme-value="auto" aria-pressed="false">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-auto"></i>
+                </span>
+                <span class="theme-label">Auto</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    <!-- Page content -->
+    <main class="content-wrapper">
+
+
+      <!-- Featured post with video -->
+      <section class="container py-4 py-md-5 my-sm-3 my-md-0">
+        <div class="row row-cols-1 row-cols-md-2 g-0 overflow-hidden rounded-5">
+
+          <!-- Video -->
+          <div class="col position-relative">
+            <div class="ratio ratio-4x3"></div>
+            <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/video01.jpg')}}" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" alt="Image">
+            <div class="position-absolute start-0 bottom-0 d-flex align-items-end w-100 h-100 z-2 p-4">
+              <a class="btn btn-lg btn-light rounded-pill m-md-2" href="https://www.youtube.com/watch?v=X7lCwxswYnE" data-glightbox data-gallery="video1">
+                <i class="ci-play fs-lg ms-n1 me-2"></i>
+                Play
+              </a>
+            </div>
+          </div>
+
+          <!-- Title + text -->
+          <div class="col bg-dark py-5 px-4 px-xl-5" data-bs-theme="dark">
+            <div class="py-md-4 py-lg-5 px-md-4 px-lg-5 my-xl-4 my-xxl-5">
+              <div class="nav mb-3">
+                <a class="nav-link text-body fs-xs text-uppercase p-0" href="{{ url_for('blog') }}">Home decoration</a>
+              </div>
+              <h1>Decorate your home in easy steps</h1>
+              <p class="text-body pb-sm-2 pb-lg-0 mb-4 mb-lg-5">Easy to make purposeful and decorative wooden pieces / Sell Handmade Wooden Decorative Pieces Ideas</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- Grid with filters -->
+      <section class="container pt-1 pt-md-2 pt-lg-3 pt-xl-4 pt-xxl-5">
+
+        <!-- Posts grid -->
+        <div class="row row-cols-1 row-cols-sm-2 gy-5">
+
+          <!-- Article -->
+          <article class="col">
+            <a class="ratio d-flex hover-effect-scale rounded-4 overflow-hidden" href="#!" style="--cz-aspect-ratio: calc(466 / 636 * 100%)">
+              <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/01.jpg')}}" class="hover-effect-target" alt="Image">
+            </a>
+            <div class="pt-4">
+              <h3 class="h5 mb-3">
+                <a class="hover-effect-underline" href="#!">Budget-Friendly Gift Ideas for Birthdays & Anniversaries</a>
+              </h3>
+              <div class="nav align-items-center gap-2 fs-xs">
+                <hr class="vr my-1 mx-1">
+                <span class="text-body-secondary">Month xx, 20xx</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article -->
+          <article class="col">
+            <a class="ratio d-flex hover-effect-scale rounded-4 overflow-hidden" href="#!" style="--cz-aspect-ratio: calc(466 / 636 * 100%)">
+              <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/02.jpg')}}" class="hover-effect-target" alt="Image">
+            </a>
+            <div class="pt-4">
+              <h3 class="h5 mb-3">
+                <a class="hover-effect-underline" href="#!"> Modern vs. Traditional Furniture: Which One Suits You?</a>
+              </h3>
+              <div class="nav align-items-center gap-2 fs-xs">
+                <hr class="vr my-1 mx-1">
+                <span class="text-body-secondary">Month xx, 20xx</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article -->
+          <article class="col">
+            <a class="ratio d-flex hover-effect-scale rounded-4 overflow-hidden" href="#!" style="--cz-aspect-ratio: calc(466 / 636 * 100%)">
+              <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/03.jpg')}}" class="hover-effect-target" alt="Image">
+            </a>
+            <div class="pt-4">
+              <h3 class="h5 mb-3">
+                <a class="hover-effect-underline" href="#!">Top 10 Sculpture Pieces to Elevate Your Home Decor</a>
+              </h3>
+              <div class="nav align-items-center gap-2 fs-xs">
+                <hr class="vr my-1 mx-1">
+                <span class="text-body-secondary">Month xx, 20xx</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article -->
+          <article class="col">
+            <a class="ratio d-flex hover-effect-scale rounded-4 overflow-hidden" href="#!" style="--cz-aspect-ratio: calc(466 / 636 * 100%)">
+              <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/04.jpg')}}" class="hover-effect-target" alt="Image">
+            </a>
+            <div class="pt-4">
+              <h3 class="h5 mb-3">
+                <a class="hover-effect-underline" href="#">The Significance of Marble Temples and Top Online Store to Purchase Them</a>
+              </h3>
+              <div class="nav align-items-center gap-2 fs-xs">
+                <hr class="vr my-1 mx-1">
+                <span class="text-body-secondary">Month xx, 20xx</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section><br><br>
+
+      <!-- Featured post with video -->
+      <section class="bg-body-tertiary py-5">
+        <div class="container py-2 py-md-3 py-lg-4 py-xl-5">
+          <div class="row align-items-center">
+
+            <!-- Video -->
+            <div class="col-md-6 col-lg-7 col-xl-8 mb-4 mb-md-0">
+              <div class="position-relative">
+                <div class="ratio" style="--cz-aspect-ratio: calc(600 / 856 * 100%)">
+                  <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/video02.jpg')}}" class="rounded-5" alt="Image">
+                </div>
+                <div class="position-absolute start-0 bottom-0 d-flex align-items-end w-100 h-100 z-2 p-4">
+                  <a class="btn btn-lg btn-light rounded-pill m-md-2" href="https://www.youtube.com/watch?v=Z1xX1Kt9NkU" data-glightbox data-gallery="video2">
+                    <i class="ci-play fs-lg ms-n1 me-2"></i>
+                    Play
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Title + text -->
+            <div class="col-md-6 col-lg-5 col-xl-4">
+              <div class="ps-md-4 ps-lg-5">
+                <div class="nav mb-3">
+                  <a class="nav-link text-body fs-xs text-uppercase p-0" href="#!">Design trends</a>
+                </div>
+                <h1 class="mb-4 mb-lg-5">Interior design trends for French windows</h1>
+                <a class="btn btn-lg btn-outline-dark rounded-pill" href="#!">Learn more</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Posts grid -->
+      <section class="container py-5 mb-1 my-sm-2 my-md-3 my-lg-4 my-xl-5">
+        <div class="row row-cols-1 row-cols-sm-2 gy-5 py-2 py-xxl-3">
+
+          <!-- Article -->
+          <article class="col">
+            <a class="ratio d-flex hover-effect-scale rounded-4 overflow-hidden" href="#!" style="--cz-aspect-ratio: calc(466 / 636 * 100%)">
+              <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/05.jpg')}}" class="hover-effect-target" alt="Image">
+            </a>
+            <div class="pt-4">
+              <div class="nav pb-2 mb-1">
+                <a class="nav-link text-body fs-xs text-uppercase p-0" href="#">Home decoration</a>
+              </div>
+              <h3 class="h5 mb-3">
+                <a class="hover-effect-underline" href="#">Unlock the secrets to stunning home decoration</a>
+              </h3>
+              <div class="nav align-items-center gap-2 fs-xs">
+                <a class="nav-link text-body-secondary fs-xs fw-normal p-0" href="#">Mason Taylor</a>
+                <hr class="vr my-1 mx-1">
+                <span class="text-body-secondary">Month xx, 20xx</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article -->
+          <article class="col">
+            <a class="ratio d-flex hover-effect-scale rounded-4 overflow-hidden" href="#!" style="--cz-aspect-ratio: calc(466 / 636 * 100%)">
+              <img src="{{ url_for('static', filename='assets/img/blog/grid/v2/06.jpg')}}" class="hover-effect-target" alt="Image">
+            </a>
+            <div class="pt-4">
+              <div class="nav pb-2 mb-1">
+                <a class="nav-link text-body fs-xs text-uppercase p-0" href="#!">Furniture</a>
+              </div>
+              <h3 class="h5 mb-3">
+                <a class="hover-effect-underline" href="#!">Maximizing small spaces: Furniture selection tips</a>
+              </h3>
+              <div class="nav align-items-center gap-2 fs-xs">
+                <a class="nav-link text-body-secondary fs-xs fw-normal p-0" href="#!">Ava Johnson</a>
+                <hr class="vr my-1 mx-1">
+                <span class="text-body-secondary">Month xx, 20xx</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+
+    <!-- Page footer -->
+  <footer class="footer bg-dark pb-4 py-lg-5" data-bs-theme="dark">
+    <div class="container pt-5 pt-lg-4 mt-sm-2 mt-md-3">
+      <div class="row pb-5">
+
+        <!-- Subscription + Social account links -->
+        <div class="col-md col-xl-8 order-md-2">
+          <div class="text-center px-sm-0 mx-auto" style="max-width: 568px">
+            <img src="{{ url_for('static', filename='assets/img/new-logo.png')}}" id="logo">
+          </div>
+        </div>
+
+        <!-- Category links -->
+        <div class="col-md-auto col-xl-2 text-center order-md-1 pt-4 pt-md-0">
+          <ul class="nav d-inline-flex flex-md-column justify-content-center align-items-center gap-md-2">
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('assorted_craft') }}">Assorted
+                Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('blue_pottery') }}">blue Pottery</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('brass_craft') }}">Brass Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('crystal_craft') }}">Crystal Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('furniture') }}">Furniture</a>
+            </li>
+            
+          </ul>
+        </div>
+
+        <!-- Customer links -->
+        <div class="col-md-auto col-xl-2 text-center order-md-3 pt-3 pt-md-0">
+          <ul class="nav d-inline-flex flex-md-column justify-content-center align-items-center gap-md-2">
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('marble_handicrafts') }}">Marble
+                Handicraft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('metal_craft') }}">Metal Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('painting') }}">Painting</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('wooden_handicrafts') }}">Wooden
+                Handicraft</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <p class="fs-xs copyrights text-center pt-lg-4 mt-n2 mt-md-0 mb-0">
+        &copy; 2025 Yo-La Handicrafts. All rights reserved.</span>
+      </p>
+    </div>
+  </footer>
+    
+    <!-- Vendor scripts -->
+    <script src="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/vendor/simplebar/dist/simplebar.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/vendor/glightbox/dist/js/glightbox.min.js')}}"></script>
+
+    <!-- Bootstrap + Theme scripts -->
+    <script src="{{ url_for('static', filename='assets/js/theme.min.js')}}"></script>
+  </body>
+</html>

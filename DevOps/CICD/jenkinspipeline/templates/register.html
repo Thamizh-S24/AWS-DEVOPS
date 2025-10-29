@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Handicrafts Store</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f5f1;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 420px;
+      margin: 60px auto;
+      background: #fff8f2;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .logo {
+      width: 120px;
+      margin-bottom: 15px;
+    }
+    h2 {
+      color: #8b5e3c;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      color: #5c3d2e;
+      display: block;
+      text-align: left;
+      margin-top: 12px;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #d8c3a5;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    button {
+      width: 100%;
+      background-color: #a67c52;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #8b5e3c;
+    }
+    .login-link {
+      margin-top: 15px;
+    }
+    .login-link a {
+      color: #8b5e3c;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+    .flash-msg {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Add your logo here -->
+    <img src="{{ url_for('static', filename='assets/app-icons/app-icon.png') }}" alt="Handicrafts Store Logo" class="logo">
+    
+    <h2>Create Your Handicrafts Account</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <p class="flash-msg">{{ msg }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <label>Full Name</label>
+      <input type="text" name="name" placeholder="Enter your full name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Create a password" required>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="login-link">
+      <p>Already a member? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
+  </div>
+</body>
+</html>

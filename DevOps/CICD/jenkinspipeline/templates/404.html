@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light" data-pwa="true">
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+
+    <!-- SEO Meta Tags -->
+    <title>Yo La Handicraft Store - 404 Error</title>
+    <meta name="description"
+    content="Discover authentic, eco-friendly handcrafted products made by skilled Indian artisans. Unique wooden, pottery, and handmade decor for your home.">
+  <meta name="keywords"
+    content="Yo-La Handicraft, Yo La, Yo La Handicraft, Yo La Handicraft, home dècor, furniture store, furniture in store, furniture superstores, shop, Shop, Yo La handicraft, YoLahandicrafts, YO-LA">
+  <meta name="author" content="Yo-La Handicrafts">
+
+    <!-- Webmanifest + Favicon / App icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json')}}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/app-icons/app-icon.png')}}" sizes="32x32">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='assets/img/new-logo.png')}}">
+
+    <!-- Theme switcher (color modes) -->
+    <script src="{{ url_for('static', filename='assets/js/theme-switcher.js')}}"></script>
+
+    <!-- Preloaded local web font (Inter) -->
+    <link rel="preload" href="{{ url_for('static', filename='assets/fonts/inter-variable-latin.woff2')}}" as="font" type="font/woff2" crossorigin>
+
+    <!-- Font icons -->
+    <link rel="preload" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.woff2')}}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.min.css')}}">
+
+    <!-- Bootstrap + Theme styles -->
+    <link rel="preload" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" id="theme-styles">
+  </head>
+
+
+  <!-- Body -->
+  <body>
+
+    <!-- Shopping cart offcanvas (Empty state) -->
+    <div class="offcanvas offcanvas-end pb-sm-2 px-sm-2" id="shoppingCart" tabindex="-1" aria-labelledby="shoppingCartLabel" style="width: 500px">
+      <div class="offcanvas-header py-3 pt-lg-4">
+        <h4 class="offcanvas-title" id="shoppingCartLabel">Shopping cart</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body text-center">
+        <svg class="d-block mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="60" viewBox="0 0 29.5 30"><path class="text-body-tertiary" d="M17.8 4c.4 0 .8-.3.8-.8v-2c0-.4-.3-.8-.8-.8-.4 0-.8.3-.8.8v2c0 .4.3.8.8.8zm3.2.6c.4.2.8 0 1-.4l.4-.9c.2-.4 0-.8-.4-1s-.8 0-1 .4l-.4.9c-.2.4 0 .9.4 1zm-7.5-.4c.2.4.6.6 1 .4s.6-.6.4-1l-.4-.9c-.2-.4-.6-.6-1-.4s-.6.6-.4 1l.4.9z" fill="currentColor"/><path class="text-body-emphasis" d="M10.7 24.5c-1.5 0-2.8 1.2-2.8 2.8S9.2 30 10.7 30s2.8-1.2 2.8-2.8-1.2-2.7-2.8-2.7zm0 4c-.7 0-1.2-.6-1.2-1.2s.6-1.2 1.2-1.2 1.2.6 1.2 1.2-.5 1.2-1.2 1.2zm11.1-4c-1.5 0-2.8 1.2-2.8 2.8a2.73 2.73 0 0 0 2.8 2.8 2.73 2.73 0 0 0 2.8-2.8c0-1.6-1.3-2.8-2.8-2.8zm0 4c-.7 0-1.2-.6-1.2-1.2s.6-1.2 1.2-1.2 1.2.6 1.2 1.2-.6 1.2-1.2 1.2zM8.7 18h16c.3 0 .6-.2.7-.5l4-10c.2-.5-.2-1-.7-1H9.3c-.4 0-.8.3-.8.8s.4.7.8.7h18.3l-3.4 8.5H9.3L5.5 1C5.4.7 5.1.5 4.8.5h-4c-.5 0-.8.3-.8.7s.3.8.8.8h3.4l3.7 14.6a3.24 3.24 0 0 0-2.3 3.1C5.5 21.5 7 23 8.7 23h16c.4 0 .8-.3.8-.8s-.3-.8-.8-.8h-16a1.79 1.79 0 0 1-1.8-1.8c0-1 .9-1.6 1.8-1.6z" fill="currentColor"/></svg>
+        <h6 class="mb-2">Your shopping cart is currently empty!</h6>
+        <p class="fs-sm mb-4">Explore our wide range of products and add items to your cart to proceed with your purchase.</p>
+        <a class="btn btn-dark rounded-pill" href="{{ url_for('shop') }}">Continue shopping</a>
+      </div>
+    </div>
+
+
+    <!-- Topbar -->
+    <div class="container position-relative d-flex justify-content-between z-1 py-3">
+      <div class="nav animate-underline">
+        <span class="text-secondary-emphasis fs-xs me-1">Contact us <span class="d-none d-sm-inline">24/7</span></span>
+        <a class="nav-link animate-target fs-xs fw-semibold p-0" href="tel:+919876543210">(+91)&nbsp;98765&nbsp;43210</a>
+      </div>
+      <a class="text-secondary-emphasis fs-xs text-decoration-none d-none d-md-inline" href="{{ url_for('custom_404') }}">"Thank you for Choosing Us"</a>
+
+    </div>
+
+
+    <!-- Navigation bar (Page header) -->
+    <header class="navbar-sticky sticky-top container z-fixed px-2" data-sticky-element>
+      <div class="navbar navbar-expand-lg flex-nowrap bg-body rounded-pill shadow ps-0 mx-1">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark rounded-pill z-0 d-none d-block-dark"></div>
+
+        <!-- Mobile offcanvas menu toggler (Hamburger) -->
+        <button type="button" class="navbar-toggler ms-3" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar brand (Logo) -->
+        <a class="navbar-brand position-relative z-1 ms-4 ms-sm-5 ms-lg-4 me-2 me-sm-0 me-lg-3 logo" href="{{ url_for('index') }}">
+          <img src="{{ url_for('static', filename='assets/app-icons/app-icon.png') }}" id="logo" alt="Logo" style="max-height:40px; width:auto;">
+        </a>
+
+        <!-- Main navigation that turns into offcanvas on screens < 992px wide (lg breakpoint) -->
+        <nav class="offcanvas offcanvas-start" id="navbarNav" tabindex="-1" aria-labelledby="navbarNavLabel">
+          <div class="offcanvas-header py-3">
+            <h5 class="offcanvas-title" id="navbarNavLabel">Browse Categories</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body pt-3 pb-4 py-lg-0 mx-lg-auto">
+            <ul class="navbar-nav position-relative">
+              <li class="nav-item me-lg-n1 me-xl-0">
+               <a class="nav-link fs-sm" href="{{ url_for('index') }}" role="button" data-bs-trigger="hover"
+                aria-expanded="false">Home</a>
+              </li>
+
+              <li class="nav-item position-static me-lg-n1 me-xl-0">
+                <a class="nav-link fs-sm" href="{{ url_for('shop') }}" role="button" data-bs-toggle="dropdown" data-bs-trigger="hover" aria-expanded="false">Shop</a>
+              </li>
+
+              <li class="nav-item me-lg-n1 me-xl-0">
+                <a class="nav-link fs-sm" href="{{ url_for('about') }}" role="button" data-bs-toggle="dropdown"
+                  data-bs-trigger="hover" data-bs-auto-close="outside" aria-expanded="false">About</a>
+              </li>
+              
+              <li class="nav-item me-lg-n1 me-xl-0">
+                <a class="nav-link fs-sm" href="{{ url_for('contact') }}" role="button" data-bs-toggle="dropdown"
+                  data-bs-trigger="hover" data-bs-auto-close="outside" aria-expanded="false">Contact</a>
+              </li>
+              <li class="nav-item me-lg-n1 me-xl-0">
+        <a class="nav-link fs-sm d-flex align-items-center" href="{{ url_for('cart') }}">
+  <i class="bi bi-cart3 me-1"></i> Cart
+  <span id="cart-count" class="badge bg-danger ms-1">
+    {{ session.get('cart')|map(attribute='qty')|sum if session.get('cart') else 0 }}
+  </span>
+</a>
+      </li>
+
+            </ul>
+            <li class="nav-item dropdown d-flex align-items-center ms-3">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false" style="padding-top:0; padding-bottom:0;">
+                <img src="{{ url_for('static', filename='assets/img/user-icon.png') }}" 
+                    alt="profile"
+                    class="rounded-circle me-2" 
+                    style="width:24px; height:24px; object-fit:cover;">
+                <span style="font-size: 0.9rem;">{{ session['user'] }}</span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+              </ul>
+            </li>
+
+          </div>
+        </nav>
+
+        <!-- Button group -->
+        <div class="d-flex gap-sm-1 position-relative z-1">
+
+          <!-- Theme switcher (light/dark/auto) -->
+          <div class="dropdown">
+            <button type="button" class="theme-switcher btn btn-icon btn-outline-secondary fs-lg border-0 rounded-circle animate-scale" data-bs-toggle="dropdown" data-bs-display="dynamic" aria-expanded="false" aria-label="Toggle theme (light)">
+              <span class="theme-icon-active d-flex animate-target">
+                <i class="ci-sun"></i>
+              </span>
+            </button>
+            <ul class="dropdown-menu start-50 translate-middle-x" style="--cz-dropdown-min-width: 9rem; --cz-dropdown-spacer: 1rem">
+              <li>
+                <button type="button" class="dropdown-item active" data-bs-theme-value="light" aria-pressed="true">
+                  <span class="theme-icon d-flex fs-base me-2">
+                    <i class="ci-sun"></i>
+                  </span>
+                  <span class="theme-label">Light</span>
+                  <i class="item-active-indicator ci-check ms-auto"></i>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="dropdown-item" data-bs-theme-value="dark" aria-pressed="false">
+                  <span class="theme-icon d-flex fs-base me-2">
+                    <i class="ci-moon"></i>
+                  </span>
+                  <span class="theme-label">Dark</span>
+                  <i class="item-active-indicator ci-check ms-auto"></i>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="dropdown-item" data-bs-theme-value="auto" aria-pressed="false">
+                  <span class="theme-icon d-flex fs-base me-2">
+                    <i class="ci-auto"></i>
+                  </span>
+                  <span class="theme-label">Auto</span>
+                  <i class="item-active-indicator ci-check ms-auto"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- Page content -->
+    <main class="content-wrapper position-relative d-flex" style="margin-top: -110px; padding-top: 110px">
+      <div class="container position-relative z-2 flex-grow-1">
+        <div class="row row-cols-1 row-cols-md-2 g-0 h-100">
+
+          <!-- 404 error page content -->
+          <div class="col d-flex flex-column align-items-center pt-5 pb-4 pb-sm-5 pe-md-5">
+            <div class="mt-auto" style="max-width: 480px">
+              <svg class="text-dark-emphasis mb-4" xmlns="http://www.w3.org/2000/svg" width="188" height="56" viewBox="0 0 188 56" fill="none"><path d="M38.768 54.984c-.677.82-1.76 1.185-2.795.941s-1.842-1.054-2.081-2.09l-.105-22.102H14.933c-2.062 0-3.733-1.671-3.733-3.733V.933c0-.515.418-.933.933-.933h2.8c.49-.001.897.376.933.865l1.524 20.602h16.618L40.169.668c.118-.397.483-.67.898-.669h2.8c.283 0 .551.128.729.349s.245.51.183.787L39.22 26.149l.133 26.527c.16.819-.054 1.665-.585 2.308zM14.067 1.867h-1V25.2h2.728L14.067 1.867zm3.463 21.467l.138 1.867h15.236l.553-1.867H17.529zM41.764 1.867l-6.16 20.795-.753 2.538h2.669l5.185-23.333h-.941zm-4.241 51.164l-.026-25.964h-24.43V28c0 1.031.836 1.867 1.867 1.867h19.6c.435 0 .813.3.91.723l.267 22.825c.119.486.602.79 1.092.686s.809-.577.72-1.07z" fill="currentColor"/><path d="M171.768 54.984c-.677.82-1.761 1.185-2.796.941s-1.841-1.054-2.081-2.09l-1.104-22.102h-18.854c-2.061 0-3.733-1.671-3.733-3.733V.933c0-.515.418-.933.933-.933h2.8c.49-.001.898.376.934.865l1.523 20.602h16.619l6.16-20.798c.118-.397.483-.67.898-.669h2.8a.93.93 0 0 1 .911 1.136l-5.559 25.013 1.134 26.527c.16.819-.054 1.665-.585 2.308zM146.067 1.867h-1V25.2h2.728l-1.728-23.333zm3.462 21.467l.138 1.867h15.236l.553-1.867h-15.927zm24.235-21.467l-6.16 20.795-.753 2.538h2.669l5.185-23.333h-.941zm-3.241 51.164l-1.026-25.964h-24.43V28c0 1.031.836 1.867 1.866 1.867h19.6c.435 0 .813.3.91.723l1.267 22.825c.119.486.603.79 1.092.686s.809-.577.721-1.07z" fill="currentColor"/><g stroke="currentColor" stroke-width="2"><circle cx="94" cy="28" r="27"/><circle cx="94" cy="28" r="22"/></g><circle cx="94" cy="28" r="2" fill="currentColor"/></svg>
+              <h1 class="h2 mb-sm-4">We lost that page ...</h1>
+              <p class="pb-2 pb-sm-3 pb-md-0 mb-4 mb-md-5">The page you are looking for was moved, removed or might never existed. Here some helpful links:</p>
+              <div class="position-relative">
+                <i class="ci-search position-absolute top-50 start-0 translate-middle-y fs-lg ms-3"></i>
+                <input type="search" class="form-control form-control-lg form-icon-start rounded-pill" placeholder="What are you looking for..." aria-label="Search">
+              </div>
+              <ul class="list-unstyled gap-4 pt-4 pt-sm-5 mt-3 mt-sm-0 mt-xl-2 mb-0">
+                <li class="nav flex-column mt-xl-2">
+                  <a class="nav-link animate-underline text-body-emphasis fw-semibold px-0 mb-1" href="{{ url_for('index') }}">
+                    <span class="animate-target">Go to homepage</span>
+                    <i class="ci-chevron-right fs-base ms-1"></i>
+                  </a>
+                  <span class="fs-sm">Continue shopping from the homepage</span>
+                </li>
+                <li class="nav flex-column mt-xl-2">
+                  <a class="nav-link animate-underline text-body-emphasis fw-semibold px-0 mb-1" href="{{ url_for('shop') }}">
+                    <span class="animate-target">Trending products</span>
+                    <i class="ci-chevron-right fs-base ms-1"></i>
+                  </a>
+                  <span class="fs-sm">Check out the trending products</span>
+                </li>
+                <li class="nav flex-column mt-xl-2">
+                  <a class="nav-link animate-underline text-body-emphasis fw-semibold px-0 mb-1" href="{{ url_for('contact') }}">
+                    <span class="animate-target">Help and support</span>
+                    <i class="ci-chevron-right fs-base ms-1"></i>
+                  </a>
+                  <span class="fs-sm">Our friendly team here to help</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Footer -->
+            <footer class="w-100 mt-auto pt-5 pb-xl-2" style="max-width: 480px">
+              <p class="fs-xs mb-0">
+                &copy; All rights reserved. Made by <span class="animate-underline"><a class="animate-target text-dark-emphasis fw-medium text-decoration-none" href="https://themeforest.net/user/codebucks/portfolio" target="_blank" rel="noreferrer">Yo-La Handicrafts</a></span>
+              </p>
+            </footer>
+          </div>
+
+          <!-- Cover image visible on screens > 768px wide (md breakpoint) -->
+          <div class="col d-none d-md-flex align-items-center justify-content-end">
+            <img src="{{ url_for('static', filename='assets/img/about/hero.jpg')}}" class="d-block px-4 px-lg-0 me-n4" width="416" alt="Handcrafted wooden chair illustration">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Background -->
+      <div class="position-absolute top-0 end-0 w-50 h-100 bg-body-tertiary d-none d-md-block"></div>
+    </main>
+
+    <!-- Bootstrap + Theme scripts -->
+    <script src="{{ url_for('static', filename='assets/js/theme.min.js')}}"></script>
+  </body>
+</html>

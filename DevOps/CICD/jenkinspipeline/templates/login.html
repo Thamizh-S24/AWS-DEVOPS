@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Handicrafts Store</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f5f1 url("{{ url_for('static', filename='images/pattern.png') }}") repeat;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #fff8f2;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .logo {
+      width: 120px;
+      margin-bottom: 15px;
+    }
+    h2 {
+      color: #8b5e3c;
+      margin-bottom: 8px;
+    }
+    .tagline {
+      color: #5c3d2e;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      color: #5c3d2e;
+      display: block;
+      text-align: left;
+      margin-top: 12px;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #d8c3a5;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    button {
+      width: 100%;
+      background-color: #a67c52;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #8b5e3c;
+    }
+    .flash-msg {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .social-login {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .social-login button {
+      width: 48%;
+      margin: 5px 1%;
+      background-color: #fff;
+      border: 1px solid #d8c3a5;
+      color: #5c3d2e;
+      cursor: pointer;
+    }
+    .social-login button:hover {
+      background-color: #f1e6dc;
+    }
+    .register-link {
+      margin-top: 15px;
+    }
+    .register-link a {
+      color: #8b5e3c;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo -->
+    <img src="{{ url_for('static', filename='assets/app-icons/app-icon.png') }}" alt="Handicrafts Store Logo" class="logo">
+    
+    <h2>Welcome Back</h2>
+    <p class="tagline">Log in to continue your journey with handcrafted treasures!</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <p class="flash-msg">{{ msg }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter your password" required>
+
+      <button type="submit">Login</button>
+    </form>
+
+
+
+    <!-- Register link -->
+    <div class="register-link">
+      <p>Don’t have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+    </div>
+  </div>
+</body>
+</html>

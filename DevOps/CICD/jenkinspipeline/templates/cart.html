@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - Handmade Store</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #fbf6f0; font-family: 'Segoe UI', Arial, sans-serif; color: #4b3a2a; }
+    h2 { color: #a3663a; font-weight: 700; display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; font-size: 2rem; }
+    .cart-card {
+        display: grid;
+        grid-template-columns: 40px 100px 1fr 100px 120px 120px;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: #fff8f2;
+        border-radius: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .cart-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+    .cart-product { display: flex; align-items: center; gap: 15px; }
+    .cart-product img { width: 90px; height: auto; object-fit: cover; border-radius: 12px; transition: transform 0.3s; }
+    .cart-product img:hover { transform: scale(1.05); }
+    .product-info strong { font-size: 1.1rem; }
+    .product-info small { color: #7a5c42; }
+    .quantity-box { display: flex; align-items: center; gap: 6px; }
+    .quantity-box button { border: none; background: #d8c3a5; color: #fff; font-weight: 600; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
+    .quantity-box button:hover { background: #a3663a; }
+    .quantity-box span { min-width: 25px; text-align: center; font-weight: 500; transition: transform 0.2s; }
+    .quantity-box span.bounce { animation: bounce 0.3s; }
+    @keyframes bounce { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+    .price, .subtotal { font-weight: 600; color: #8b5e3c; min-width: 70px; text-align: right; transition: all 0.3s ease; }
+    .fade-update { opacity: 0; transform: translateY(-5px); transition: opacity 0.3s, transform 0.3s; }
+    .fade-update.show { opacity: 1; transform: translateY(0); }
+    .order-summary { background: linear-gradient(145deg, #fff8f2, #fef3eb); padding: 25px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.08); position: sticky; top: 20px; transition: all 0.3s ease; }
+    .order-summary h4 { font-weight: 700; margin-bottom: 15px; }
+    .order-summary hr { border-top: 2px solid #f0e5d8; }
+    .order-summary p { font-size: 0.95rem; margin-bottom: 8px; }
+    .order-summary h5 { font-weight: 700; color: #a3663a; transition: all 0.3s ease; }
+    .order-summary .btn { border-radius: 8px; font-weight: 600; padding: 12px; font-size: 1rem; transition: all 0.2s; }
+    .order-summary .btn-success { background: #a3663a; border-color: #a3663a; }
+    .order-summary .btn-success:hover { background: #8b5e3c; border-color: #8b5e3c; }
+    .order-summary .btn-outline-danger:hover { background-color: #fce7e0; }
+    .empty-cart { text-align: center; padding: 80px 20px; background: #fff8f2; border-radius: 20px; box-shadow: 0 6px 25px rgba(0,0,0,0.08); }
+    .empty-cart img { width: 200px; margin-bottom: 25px; transition: transform 0.3s; }
+    .empty-cart img:hover { transform: scale(1.05); }
+    .empty-cart h5 { font-weight: 700; margin-bottom: 10px; font-size: 1.5rem; }
+    .trust-badges { margin-top: 30px; text-align: center; font-size: 14px; color: #5c3d2e; }
+    .trust-badges img { width: 50px; margin: 0 10px; }
+    @media (max-width: 991px) { .cart-product img { width: 70px; height: 70px; } .price, .subtotal { min-width: 50px; } }
+    @media (max-width: 575px) { .cart-card { flex-direction: column; align-items: flex-start; } .price, .subtotal { text-align: left; } .order-summary { position: static; margin-top: 20px; } }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <h2>🛒 Your Cart</h2>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show mt-3" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if cart %}
+  <form method="POST" action="{{ url_for('checkout') }}">
+    <div class="row mt-4">
+      <div class="col-lg-8">
+        {% for item in cart %}
+        <div class="cart-card">
+  <!-- Checkbox -->
+  <input type="checkbox" name="selected_items" value="{{ loop.index0 }}" class="form-check-input item-checkbox" checked>
+
+  <div class="cart-product">
+    <img src="{{ url_for('static', filename=item.image) if item.image else url_for('static', filename='assets/img/default_product.png') }}" alt="{{ item.name }}">
+    <div class="product-info">
+      <strong>{{ item.name }}</strong><br>
+      <small>Handmade Craft</small>
+    </div>
+  </div>
+
+  <div class="price fade-update" id="price-{{ loop.index0 }}">
+    ₹{{ "%.2f"|format(item.price) }}
+  </div>
+
+  <div class="quantity-box">
+    <form method="POST" action="{{ url_for('update_cart', product_index=loop.index0, action='decrease') }}" style="display:inline;">
+      <button type="submit">-</button>
+    </form>
+    <span id="qty-{{ loop.index0 }}">{{ item.qty }}</span>
+    <form method="POST" action="{{ url_for('update_cart', product_index=loop.index0, action='increase') }}" style="display:inline;">
+      <button type="submit">+</button>
+    </form>
+  </div>
+
+  <div class="subtotal fade-update subtotal-val"
+       data-price="{{ item.price }}"
+       data-qty="{{ item.qty }}">
+    ₹{{ "%.2f"|format(item.price * item.qty) }}
+  </div>
+
+  <!-- 🆕 Remove Button -->
+  <form method="POST" action="{{ url_for('remove_item', product_index=loop.index0) }}" style="display:inline;">
+    <button type="submit" class="btn btn-sm btn-outline-danger ms-2">Remove</button>
+  </form>
+</div>
+
+        {% endfor %}
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary mt-3">← Continue Shopping</a>
+      </div>
+
+      <div class="col-lg-4 mt-4 mt-lg-0">
+        <div class="order-summary">
+          <h4>Order Summary</h4>
+          <hr>
+          <p><strong>Subtotal:</strong> <span id="total-subtotal">₹{{ "%.2f"|format(total) }}</span></p>
+          <p><strong>Estimated Shipping:</strong> ₹50.00</p>
+          <p><strong>Taxes:</strong> ₹0.00</p>
+          <h5 id="total-amount">Total: ₹{{ "%.2f"|format(total + 50) }}</h5>
+          <hr>
+          <a href="{{ url_for('clear_cart') }}" class="btn btn-outline-danger w-100 mb-2">Clear Cart</a>
+          <button type="submit" class="btn btn-success w-100">Proceed to Checkout</button>
+        </div>
+        <div class="trust-badges">
+          <p>Secure & Trusted Checkout</p>
+          <img src="{{ url_for('static', filename='assets/img/secure.png') }}" alt="Secure">
+          <img src="{{ url_for('static', filename='assets/img/handmade.png') }}" alt="Handmade">
+        </div>
+      </div>
+    </div>
+  </form>
+  {% else %}
+    <div class="empty-cart mt-4">
+      <img src="{{ url_for('static', filename='assets/img/cart_empty.jpg') }}" alt="Empty Cart">
+      <h5>Your cart is empty</h5>
+      <p>Discover unique handmade treasures and fill your cart with joy!</p>
+      <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Start Shopping</a>
+    </div>
+  {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelectorAll('.fade-update').forEach(el => el.classList.add('show'));
+
+  const qtyElements = document.querySelectorAll('.quantity-box span');
+  qtyElements.forEach(qty => {
+    qty.addEventListener('DOMSubtreeModified', () => {
+      qty.classList.add('bounce');
+      setTimeout(() => qty.classList.remove('bounce'), 300);
+    });
+  });
+
+  // Dynamic order summary update
+  const checkboxes = document.querySelectorAll('.item-checkbox');
+  const subtotalElements = document.querySelectorAll('.subtotal-val');
+  const subtotalDisplay = document.getElementById('total-subtotal');
+  const totalDisplay = document.getElementById('total-amount');
+  const shipping = 50;
+
+  function updateSummary() {
+    let subtotal = 0;
+    checkboxes.forEach((cb, index) => {
+      if (cb.checked) {
+        let price = parseFloat(subtotalElements[index].dataset.price);
+        let qty = parseInt(subtotalElements[index].dataset.qty);
+        subtotal += price * qty;
+      }
+    });
+    subtotalDisplay.textContent = "₹" + subtotal.toFixed(2);
+    totalDisplay.textContent = "Total: ₹" + (subtotal + shipping).toFixed(2);
+  }
+
+  checkboxes.forEach(cb => cb.addEventListener('change', updateSummary));
+  updateSummary();
+</script>
+</body>
+</html>

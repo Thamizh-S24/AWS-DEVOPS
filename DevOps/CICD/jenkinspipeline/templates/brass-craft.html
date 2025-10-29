@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light" data-pwa="true">
+
+<head>
+  <meta charset="utf-8">
+
+  <!-- Viewport -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+
+  <!-- SEO Meta Tags -->
+  <title>Shree Laxminarayan Heritage Handicrafts | Brass Craft</title>
+  <meta name="description"
+    content="Discover authentic, eco-friendly handcrafted products made by skilled Indian artisans. Unique wooden, pottery, and handmade decor for your home.">
+  <meta name="keywords"
+    content="Yo-La Handicraft, Yo La, Yo La Handicraft, Yo La Handicraft, home dècor, furniture store, furniture in store, furniture superstores, shop, Shop, Yo La handicraft, YoLahandicrafts, YO-LA">
+  <meta name="author" content="Yo-La Handicrafts">
+
+  <!-- Webmanifest + Favicon / App icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json')}}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/app-icons/app-icon.png')}}" sizes="32x32">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='assets/img/new-logo.png')}}">
+
+  <!-- Theme switcher (color modes) -->
+  <script src="{{ url_for('static', filename='assets/js/theme-switcher.js')}}"></script>
+
+  <!-- Preloaded local web font (Inter) -->
+  <link rel="preload" href="{{ url_for('static', filename='assets/fonts/inter-variable-latin.woff2')}}" as="font" type="font/woff2" crossorigin>
+
+  <!-- Font icons -->
+  <link rel="preload" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.woff2')}}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/icons/cartzilla-icons.min.css')}}">
+
+  <!-- Vendor styles -->
+   
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/choices.js/public/assets/styles/choices.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/nouislider/dist/nouislider.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/simplebar/dist/simplebar.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/glightbox/dist/css/glightbox.min.css')}}">
+
+  <!-- Bootstrap + Theme styles -->
+  <link rel="preload" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" as="style">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/theme.min.css')}}" id="theme-styles">
+</head>
+
+
+<!-- Body -->
+
+<body>
+
+  <!-- Topbar -->
+  <div class="container position-relative d-flex justify-content-between z-1 py-2">
+    <div class="nav animate-underline">
+      <span class="text-secondary-emphasis fs-xs me-1">Contact us <span class="d-none d-sm-inline">24/7</span></span>
+      <a class="nav-link animate-target fs-xs fw-semibold p-0" href="tel:+919876543210">(+91)&nbsp;98765&nbsp;43210</a>
+    </div>
+    <a class="text-secondary-emphasis fs-xs text-decoration-none d-none d-md-inline" href="{{ url_for('brass_craft') }}">"Thank you for choosing Us"</a>
+  </div>
+
+  <!-- Navigation bar (Page header) -->
+  <header class="navbar-sticky sticky-top container z-fixed px-2" data-sticky-element>
+    <div class="navbar navbar-expand-lg flex-nowrap bg-body rounded-pill shadow ps-0 mx-1">
+      <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark rounded-pill z-0 d-none d-block-dark"></div>
+
+      <!-- Mobile offcanvas menu toggler (Hamburger) -->
+      <button type="button" class="navbar-toggler ms-3" data-bs-toggle="offcanvas" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar brand (Logo) -->
+      <a class="navbar-brand position-relative z-1 ms-4 ms-sm-5 ms-lg-4 me-2 me-sm-0 me-lg-3 logo" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='assets/app-icons/app-icon.png') }}" id="logo" alt="Logo" style="max-height:40px; width:auto;">
+      </a>
+
+      <!-- Main navigation that turns into offcanvas on screens < 992px wide (lg breakpoint) -->
+      <nav class="offcanvas offcanvas-start" id="navbarNav" tabindex="-1" aria-labelledby="navbarNavLabel">
+        <div class="offcanvas-header py-3">
+          <h5 class="offcanvas-title" id="navbarNavLabel">Browse Categories</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-3 pb-4 py-lg-0 mx-lg-auto">
+          <ul class="navbar-nav position-relative">
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('index') }}" role="button" data-bs-trigger="hover"
+                aria-expanded="false">Home</a>
+            </li>
+
+            </li>
+            <li class="nav-item dropdown position-static me-lg-n1 me-xl-0">
+              <a class="nav-link dropdown-toggle" aria-current="page" href="{{ url_for('shop') }}" role="button"
+                data-bs-toggle="dropdown" data-bs-trigger="hover" aria-expanded="false">Shop</a>
+              <div class="dropdown-menu rounded-4 p-4">
+                <div class="d-flex flex-column flex-lg-row gap-4">
+                  <div style="min-width: 190px">
+                    <div class="h6 mb-2" href="{{ url_for('shop') }}">Store categorie</div>
+                    <ul class="nav flex-column gap-2 mt-0">
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('assorted_craft') }}">Assorted Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('blue_pottery') }}">blue Pottery</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0 active"
+                          href="{{ url_for('brass_craft') }}">Brass Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('crystal_craft') }}">Crystal Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('furniture') }}">Furniture</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('marble_handicrafts') }}">Marble Handicraft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('metal_craft') }}">Metal Craft</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('painting') }}">Painting</a>
+                      </li>
+                      <li class="d-flex w-100 pt-1">
+                        <a class="nav-link animate-underline animate-target d-inline fw-normal text-truncate p-0"
+                          href="{{ url_for('wooden_handicrafts') }}">Wooden Handicraft</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('about') }}" role="button" data-bs-trigger="hover"
+                data-bs-auto-close="outside" aria-expanded="false">About</a>
+            </li>
+
+            <li class="nav-item me-lg-n1 me-xl-0">
+              <a class="nav-link fs-sm" href="{{ url_for('contact') }}" role="button" data-bs-trigger="hover"
+                data-bs-auto-close="outside" aria-expanded="false">Contact</a>
+            </li>
+            <li class="nav-item me-lg-n1 me-xl-0">
+        <a class="nav-link fs-sm d-flex align-items-center" href="{{ url_for('cart') }}">
+  <i class="bi bi-cart3 me-1"></i> Cart
+  <span id="cart-count" class="badge bg-danger ms-1">
+    {{ session.get('cart')|map(attribute='qty')|sum if session.get('cart') else 0 }}
+  </span>
+</a>
+      </li>
+
+          </ul>
+          <li class="nav-item dropdown d-flex align-items-center ms-3">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false" style="padding-top:0; padding-bottom:0;">
+              <img src="{{ url_for('static', filename='assets/img/user-icon.png') }}" 
+                  alt="profile"
+                  class="rounded-circle me-2" 
+                  style="width:24px; height:24px; object-fit:cover;">
+              <span style="font-size: 0.9rem;">{{ session['user'] }}</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+
+        </div>
+      </nav>
+
+      <!-- Button group -->
+      <div class="d-flex gap-sm-1 position-relative z-1">
+
+        <!-- Theme switcher (light/dark/auto) -->
+        <div class="dropdown">
+          <button type="button"
+            class="theme-switcher btn btn-icon btn-outline-secondary fs-lg border-0 rounded-circle animate-scale"
+            data-bs-toggle="dropdown" data-bs-display="dynamic" aria-expanded="false" aria-label="Toggle theme (light)">
+            <span class="theme-icon-active d-flex animate-target">
+              <i class="ci-sun"></i>
+            </span>
+          </button>
+          <ul class="dropdown-menu start-50 translate-middle-x"
+            style="--cz-dropdown-min-width: 9rem; --cz-dropdown-spacer: 1rem">
+            <li>
+              <button type="button" class="dropdown-item active" data-bs-theme-value="light" aria-pressed="true">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-sun"></i>
+                </span>
+                <span class="theme-label">Light</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item" data-bs-theme-value="dark" aria-pressed="false">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-moon"></i>
+                </span>
+                <span class="theme-label">Dark</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item" data-bs-theme-value="auto" aria-pressed="false">
+                <span class="theme-icon d-flex fs-base me-2">
+                  <i class="ci-auto"></i>
+                </span>
+                <span class="theme-label">Auto</span>
+                <i class="item-active-indicator ci-check ms-auto"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </header><br><br>
+
+
+  <!-- Page content -->
+  <main class="content-wrapper">
+    <div class="container pb-5 mb-2 mb-sm-3 mb-lg-4 mb-xl-5">
+
+      <!-- Breadcrumb -->
+      <nav class="position-relative pt-3 my-3 my-md-4" aria-label="breadcrumb" style="z-index: 1021">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{{ url_for('shop') }}">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Brass Craft Catalog</li>
+        </ol>
+      </nav>
+
+      <!-- Page title -->
+      <h1 class="h3 position-relative pb-sm-2 pb-md-3" style="z-index: 1021">Brass Craft</h1>
+
+      <!-- Product carousel -->
+      <div class="position-relative pb-xxl-3">
+
+        <!-- Slider -->
+        <div class="swiper pt-3 pt-sm-4" data-swiper='{
+        "slidesPerView": 2,
+        "spaceBetween": 24,
+        "loop": true,
+        "navigation": {
+          "prevEl": ".popular-prev",
+          "nextEl": ".popular-next"
+        },
+        "breakpoints": {
+          "768": {
+            "slidesPerView": 3
+          },
+          "992": {
+            "slidesPerView": 4
+          }
+        }
+      }'>
+          <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 gy-5" id="shopGalleryContainer">
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Preview Modal -->
+      <div id="imgPopupModal" class="modal">
+        <div class="modal_body">
+          <span class="modalCloseBtn">&times;</span>
+          <div class="modal-content">
+            <img class="" id="popupFullImage">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Page footer -->
+  <footer class="footer bg-dark pb-4 py-lg-5" data-bs-theme="dark">
+    <div class="container pt-5 pt-lg-4 mt-sm-2 mt-md-3">
+      <div class="row pb-5">
+
+        <!-- Subscription + Social account links -->
+        <div class="col-md col-xl-8 order-md-2">
+          <div class="text-center px-sm-0 mx-auto" style="max-width: 568px">
+            <img src="{{ url_for('static', filename='assets/img/new-logo.png')}}" id="logo">
+          </div>
+        </div>
+
+        <!-- Category links -->
+        <div class="col-md-auto col-xl-2 text-center order-md-1 pt-4 pt-md-0">
+          <ul class="nav d-inline-flex flex-md-column justify-content-center align-items-center gap-md-2">
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('assorted_craft') }}">Assorted
+                Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('blue_pottery') }}">blue Pottery</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('brass_craft') }}">Brass Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('crystal_craft') }}">Crystal Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('furniture') }}">Furniture</a>
+            </li>
+            
+          </ul>
+        </div>
+
+        <!-- Customer links -->
+        <div class="col-md-auto col-xl-2 text-center order-md-3 pt-3 pt-md-0">
+          <ul class="nav d-inline-flex flex-md-column justify-content-center align-items-center gap-md-2">
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('marble_handicrafts') }}">Marble
+                Handicraft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('metal_craft') }}">Metal Craft</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('painting') }}">Painting</a>
+            </li>
+            <li class="animate-underline my-1 mx-2 m-md-0">
+              <a class="nav-link d-inline-flex fw-normal p-0 animate-target" href="{{ url_for('wooden_handicrafts') }}">Wooden
+                Handicraft</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <p class="fs-xs copyrights text-center pt-lg-4 mt-n2 mt-md-0 mb-0">
+        &copy; 2025 Yo-La Handicrafts. All rights reserved.</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Vendor scripts -->
+  <script src="{{ url_for('static', filename='assets/vendor/choices.js/public/assets/scripts/choices.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/nouislider/dist/nouislider.min.js')}}"></script>
+
+  <script src="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/simplebar/dist/simplebar.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/glightbox/dist/js/glightbox.min.js')}}"></script>
+
+  
+
+
+  <!-- Bootstrap + Theme scripts -->
+  <script src="{{ url_for('static', filename='assets/js/theme.min.js')}}"></script>
+
+  <script>
+    const Domane = window.location.host;
+    console.log(Domane, 'domain');
+
+    const baseUrl = `{{ url_for('static', filename='assets/img') }}/shop/brass-craft`;
+
+    // Products Home
+    const shopProducts = [
+      { name: "Brass Handcrafted Apple Shape Container", image: `${baseUrl}/brass-handcrafted-apple-shape-container.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Bottle Design Pot", image: `${baseUrl}/brass-handcrafted-bottle-design-pot.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Bridal Horse Brown Finish 6", image: `${baseUrl}/brass-handcrafted-bridal-horse-brown-finish-6.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Champagne Bottle", image: `${baseUrl}/brass-handcrafted-champagne-bottle.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Decorative Pot", image: `${baseUrl}/brass-handcrafted-decorative-pot.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Dog 4", image: `${baseUrl}/brass-handcrafted-dog-4.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Elephant on Stand", image: `${baseUrl}/brass-handcrafted-elephant-on-stand.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Flower Vase Bottle Design", image: `${baseUrl}/brass-handcrafted-flower-vase-bottle-design.jpg` ,price: 1200},
+      { name: "Brass Handcrafted flower-vase", image: `${baseUrl}/brass-handcrafted-flower-vase.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Goblet 5", image: `${baseUrl}/brass-handcrafted-goblet-5.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Gold Plated Lord Ganesha 2", image: `${baseUrl}/brass-handcrafted-gold-plated-lord-ganesha-2.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Gold Plated Lord Ganesha 4.5", image: `${baseUrl}/brass-handcrafted-gold-plated-lord-ganesha-4.5.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Hukka Marori Khulai Work", image: `${baseUrl}/brass-handcrafted-hukka-marori-khulai-work.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Hukka Marori Work", image: `${baseUrl}/brass-handcrafted-hukka-marori-work.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Kalash Red", image: `${baseUrl}/brass-handcrafted-kalash-red.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Kalash", image: `${baseUrl}/brass-handcrafted-kalash.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Kashmiri Design Vase", image: `${baseUrl}/brass-handcrafted-kashmiri-design-vase.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Lancing Lady", image: `${baseUrl}/brass-handcrafted-lancing-lady.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Lutiya Pot Marori Work", image: `${baseUrl}/brass-handcrafted-lutiya-pot-marori-work.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Magical Lamp Chirag", image: `${baseUrl}/brass-handcrafted-magical-lamp-chirag.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Marori Marori Khulai Pot", image: `${baseUrl}/brass-handcrafted-marori-khulai-pot.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Marori Khulai Work Container", image: `${baseUrl}/brass-handcrafted-marori-khulai-work-container.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Marori Work Pot Small", image: `${baseUrl}/brass-handcrafted-marori-khulai-work-pot-small.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Marori Champagne Bottle", image: `${baseUrl}/brass-handcrafted-marori-work-champagne-bottle.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Marori Chirag", image: `${baseUrl}/brass-handcrafted-marori-work-chirag.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Marori Kulai Pot", image: `${baseUrl}/brass-handcrafted-marori-work-kulai-pot.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Marori Work pot", image: `${baseUrl}/brass-handcrafted-marori-work-pot.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Marori Work Small Pot", image: `${baseUrl}/brass-handcrafted-marori-work-small-pot.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Marori Marori Work Surai", image: `${baseUrl}/brass-handcrafted-marori-work-surai.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Paimana Nepali Glass 9", image: `${baseUrl}/brass-handcrafted-paimana-nepali-glass-9.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Paimana Nepali Marori Work Glass 9", image: `${baseUrl}/brass-handcrafted-paimana-nepali-marori-work-glass-9.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Paimana Pakiza Marori Work", image: `${baseUrl}/brass-handcrafted-paimana-pakiza-marori-work.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Paimana Pakiza Wine Glass", image: `${baseUrl}/brass-handcrafted-paimana-pakiza-wine-glass.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Powder Box 3", image: `${baseUrl}/brass-handcrafted-powder-box-3.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Powder Box Round", image: `${baseUrl}/brass-handcrafted-powder-box-round.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Round Storage Box 5", image: `${baseUrl}/brass-handcrafted-round-storage-box-5.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Sindur Dibbi Pill Box", image: `${baseUrl}/brass-handcrafted-sindur-dibbi-pill-box.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Surai Long Neck", image: `${baseUrl}/brass-handcrafted-surai-long-neck.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Surai Round", image: `${baseUrl}/brass-handcrafted-surai-round.jpg`,price: 1200},
+      { name: "Brass Handcrafted Surai", image: `${baseUrl}/brass-handcrafted-surai.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Wine Bottle", image: `${baseUrl}/brass-handcrafted-wine-bottle.jpg`,price: 1200 },
+      { name: "Brass Handcrafted Wine Set", image: `${baseUrl}/brass-handcrafted-wine-set.jpg` ,price: 1200},
+      { name: "Brass Handcrafted Surai Flat Bottom Handcrafted Mughal Marori Work", image: `${baseUrl}/brass-surai-flat-bottom-handcrafted-mughal-marori-work.jpg`,price: 1200 },
+      { name: "Handcrafted Brass Goblet", image: `${baseUrl}/handcrafted-brass-goblet.jpg`,price: 1200 },
+      { name: "Handcrafted Brass Goblet", image: `${baseUrl}/handcrafted-brass-goblet.png` ,price: 1200},
+      { name: "Handcrafted Brass Jar With Lid", image: `${baseUrl}/handcrafted-brass-jar-with-lid.jpg`,price: 1200 },
+      { name: "Handcrafted Brass Surahi With Long Narrow Neck", image: `${baseUrl}/handcrafted-brass-surahi-with-long-narrow-neck.jpg`,price: 1200 },
+      { name: "Handcrafted Brass Jaipuri Design Flower Vase", image: `${baseUrl}/handcrafted-jaipuri-design-flower-vase.jpg` ,price: 1200},
+      { name: "Handcrafted Marori Work Brass Pot", image: `${baseUrl}/handcrafted-marori-work-brass-pot.jpg`,price: 1200 },
+      { name: "Jaipur Design Brass Handcrafted Flower Vase", image: `${baseUrl}/jaipur-design-brass-handcrafted-flower-vase.jpg`,price: 1200 }
+    ];
+
+
+    const shopGallery = document.getElementById('shopGalleryContainer');
+    const imgPopupModal = document.getElementById('imgPopupModal');
+    const popupImage = document.getElementById('popupFullImage');
+    const modalCloseBtn = document.getElementsByClassName('modalCloseBtn')[0];
+
+    shopProducts.forEach(item => {
+      const productCard = document.createElement('div');
+      // swiper-slide class remove kar diya gaya hai
+
+      productCard.innerHTML = `
+      <div class="animate-underline">
+        <img src="${item.image}" alt="${item.name}" class="productThumbnail rounded-4" style="cursor:pointer;"><br/><br/>
+        <h3 class="d-block fs-sm fw-medium text-truncate product_title">
+          <span class="animate-target">${item.name}</span>
+        </h3>
+        <br/>
+        <p class="product-price"><b>₹${item.price}</b></p>
+        <button class="btn btn-primary w-100 rounded-pill px-3 add-to-cart-btn"
+  data-name="${item.name}"
+  data-price="${item.price}"
+  data-image="${item.image}">  <!-- Add this -->
+  Add to Cart
+</button>
+
+
+
+      </div>
+    `;
+
+      // Image Click Event for Popup
+      productCard.querySelector('.productThumbnail').addEventListener('click', () => {
+        imgPopupModal.style.display = "block";
+        popupImage.src = item.image;
+      });
+
+      shopGallery.appendChild(productCard);
+    });
+    // Add-to-cart click handler (AJAX)
+document.addEventListener('click', async (e) => {
+  if (e.target.classList.contains('add-to-cart-btn')) {
+    const name = e.target.dataset.name;
+    const price = e.target.dataset.price;
+    let image = e.target.dataset.image;
+
+    // 🔥 Fix: remove leading "/static/" if present
+    if (image && image.startsWith('/static/')) {
+      image = image.replace('/static/', '');
+    }
+
+    try {
+      const response = await fetch(`/add-to-cart/${encodeURIComponent(name)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ price: price, image: image })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert(result.message);
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) cartCountEl.textContent = result.cart_count;
+      } else {
+        alert('Failed to add item to cart.');
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Something went wrong.');
+    }
+  }
+});
+
+
+
+
+    // Close Modal on X Click
+    modalCloseBtn.onclick = () => {
+      imgPopupModal.style.display = "none";
+    };
+
+    // Close Modal on Outside Click
+    window.onclick = (event) => {
+      if (event.target == imgPopupModal) {
+        imgPopupModal.style.display = "none";
+      }
+    };
+  </script>
+
+</body>
+
+</html>
