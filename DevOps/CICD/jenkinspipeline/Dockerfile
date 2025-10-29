@@ -9,7 +9,7 @@ COPY . /app
 
 # Install dependencies
 RUN pip install --upgrade pip
-RUN pip install flask flask_login mysql-connector-python
+RUN pip install flask flask_login mysql-connector-python pymysql
 
 # Expose Flask default port
 EXPOSE 5000
