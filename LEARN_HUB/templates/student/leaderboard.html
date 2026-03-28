@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}Leaderboard - Learn Hub{% endblock %}
+{% block page_title %}Hall of Fame{% endblock %}
+
+{% block extra_head %}
+{% include 'student/premium_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute top-[10%] right-[10%] w-[30vw] h-[30vw] rounded-full bg-yellow-400/10 blur-[100px] orb-slow"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-indigo-400/10 blur-[120px] orb-fast"></div>
+</div>
+
+<div class="relative z-10 p-6 max-w-5xl mx-auto space-y-16">
+    <div class="text-center space-y-4 pt-8">
+        <span class="px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-[10px] font-black tracking-widest uppercase shadow-md shadow-yellow-500/20 inline-block">Global Ranking</span>
+        <h2 class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-700 italic tracking-tighter drop-shadow-sm">THE HALL OF FAME 🏆</h2>
+        <p class="text-gray-500 font-medium text-lg max-w-2xl mx-auto">Celebrating the most dedicated and brilliant learners in our ecosystem. Will your name be here next?</p>
+    </div>
+
+    <!-- Podium Section -->
+    <div class="flex flex-col md:flex-row items-end justify-center gap-4 md:gap-8 mt-20 px-4 relative">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/80 to-transparent bottom-0 h-32 z-[-1] rounded-b-[4rem] blur-xl"></div>
+        
+        <!-- 2nd Place -->
+        {% if pairings|length > 1 %}
+        {% with second=rankings.1 %}
+        <div class="flex-1 max-w-[220px] text-center space-y-4 order-2 md:order-1 relative z-10">
+            <div class="relative inline-block group transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute inset-0 rounded-full bg-gray-300 blur-md opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                <img class="relative w-24 h-24 rounded-full border-4 border-gray-200 group-hover:border-indigo-400 transition-all shadow-xl" src="https://ui-avatars.com/api/?name={{ second.username }}&background=e5e7eb&color=6b7280" alt="{{ second.username }}">
+                <div class="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-300 rounded-full flex items-center justify-center text-gray-700 font-black text-sm ring-4 ring-white shadow-md">2</div>
+            </div>
+            <div class="glass-card bg-gray-50/80 rounded-t-[3rem] rounded-b-xl p-6 h-40 flex flex-col items-center justify-center border-t-4 border-gray-200">
+                <p class="font-black text-gray-900 italic truncate w-full text-lg">{{ second.get_full_name|default:second.username }}</p>
+                <div class="mt-2 px-3 py-1 bg-white rounded-lg shadow-sm">
+                    <p class="text-[10px] font-black text-gray-400 uppercase italic">{{ second.achievement_count }} Badges</p>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endif %}
+
+        <!-- 1st Place -->
+        {% if pairings|length > 0 %}
+        {% with first=rankings.0 %}
+        <div class="flex-1 max-w-[280px] text-center space-y-6 order-1 md:order-2 z-20 transform md:-translate-y-8">
+            <div class="relative inline-block group transform hover:-translate-y-2 transition-transform duration-500">
+                <div class="absolute inset-0 rounded-full bg-yellow-400 blur-xl opacity-40 group-hover:opacity-60 transition-opacity animate-pulse"></div>
+                <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-14 h-14 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full flex items-center justify-center text-white animate-bounce shadow-lg shadow-yellow-500/40 z-20">
+                    <i data-lucide="crown" class="w-7 h-7"></i>
+                </div>
+                <img class="relative w-36 h-36 rounded-full border-8 border-yellow-300 shadow-2xl z-10" src="https://ui-avatars.com/api/?name={{ first.username }}&background=facc15&color=fff" alt="{{ first.username }}">
+                <div class="absolute -bottom-4 right-2 w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-black text-lg ring-4 ring-white shadow-xl z-20">1</div>
+            </div>
+            <div class="bg-gradient-to-b from-indigo-600 to-purple-800 rounded-t-[4rem] rounded-b-[2rem] p-10 h-56 flex flex-col items-center justify-center shadow-2xl shadow-indigo-600/30 relative overflow-hidden border border-indigo-400/30 backdrop-blur-sm">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <p class="font-black text-white text-2xl italic truncate w-full relative z-10 drop-shadow-md">{{ first.get_full_name|default:first.username }}</p>
+                <div class="mt-3 px-4 py-1.5 bg-white/20 backdrop-blur border border-white/20 rounded-xl relative z-10 flex items-center gap-1.5 shadow-inner">
+                    <i data-lucide="star" class="w-3 h-3 text-yellow-300 fill-current"></i>
+                    <p class="text-[11px] font-black text-white uppercase italic tracking-widest">{{ first.achievement_count }} Master Badges</p>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endif %}
+
+        <!-- 3rd Place -->
+        {% if pairings|length > 2 %}
+        {% with third=rankings.2 %}
+        <div class="flex-1 max-w-[220px] text-center space-y-4 order-3 md:order-3 relative z-10">
+            <div class="relative inline-block group transform hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute inset-0 rounded-full bg-orange-300 blur-md opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                <img class="relative w-24 h-24 rounded-full border-4 border-orange-200 group-hover:border-orange-400 transition-all shadow-xl" src="https://ui-avatars.com/api/?name={{ third.username }}&background=ffedd5&color=9a3412" alt="{{ third.username }}">
+                <div class="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-300 rounded-full flex items-center justify-center text-orange-800 font-black text-sm ring-4 ring-white shadow-md">3</div>
+            </div>
+            <div class="glass-card bg-orange-50/80 rounded-t-[3rem] rounded-b-xl p-6 h-32 flex flex-col items-center justify-center border-t-4 border-orange-200">
+                 <p class="font-black text-gray-900 italic truncate w-full text-lg">{{ third.get_full_name|default:third.username }}</p>
+                 <div class="mt-2 px-3 py-1 bg-white rounded-lg shadow-sm">
+                    <p class="text-[10px] font-black text-gray-400 uppercase italic">{{ third.achievement_count }} Badges</p>
+                 </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endif %}
+    </div>
+
+    <!-- Rankings List -->
+    <div class="glass-card premium-community rounded-[3rem] shadow-2xl overflow-hidden">
+        <div class="divide-y divide-gray-100/60">
+            {% for student in rankings %}
+            {% if forloop.counter > 3 %}
+            <div class="p-6 md:p-8 flex items-center justify-between hover:bg-white transition-colors group">
+                <div class="flex items-center gap-6">
+                    <div class="w-10 text-center">
+                        <span class="text-xl font-black text-gray-300 italic group-hover:text-indigo-400 transition-colors">#{{ forloop.counter }}</span>
+                    </div>
+                    <img class="w-14 h-14 rounded-[1.2rem] grayscale group-hover:grayscale-0 transition-all shadow-sm border border-gray-100" src="https://ui-avatars.com/api/?name={{ student.username }}&background=f3f4f6&color=9ca3af" alt="{{ student.username }}">
+                    <div>
+                        <h5 class="text-lg font-black text-gray-900 italic group-hover:text-indigo-600 transition-colors">{{ student.get_full_name|default:student.username }}</h5>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1 bg-gray-100 px-2 py-0.5 rounded-md inline-block group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-colors">Level {{ student.achievement_count }} Element</p>
+                    </div>
+                </div>
+                <div class="text-right flex items-center gap-3">
+                    <span class="text-2xl font-black text-gray-900 italic group-hover:text-indigo-600 transition-colors">{{ student.achievement_count }}</span>
+                    <div class="w-10 h-10 bg-indigo-50 text-indigo-400 rounded-xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-indigo-500/30">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Personal Standing -->
+    <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-[3rem] p-10 md:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group shadow-2xl">
+        <div class="flex flex-col md:flex-row items-center text-center md:text-left gap-8 relative z-10">
+            <div class="w-32 h-32 bg-white/10 backdrop-blur border border-white/20 rounded-[2.5rem] flex flex-col items-center justify-center group-hover:bg-indigo-600/40 group-hover:border-indigo-400/50 transition-all duration-700 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+                <span class="text-[10px] font-black uppercase tracking-widest text-indigo-300 italic mb-1">Your Rank</span>
+                <span class="text-5xl font-black italic text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 group-hover:to-white transition-all">#{{ user_rank }}</span>
+            </div>
+            <div>
+                <h4 class="text-3xl font-black italic tracking-tight mb-2">Focus on the next badge, <span class="text-indigo-400">{{ user.first_name|default:user.username }}</span>!</h4>
+                <p class="text-gray-400 font-medium mt-2 max-w-lg text-lg">You share a rank with <strong class="text-gray-200">{{ user_rank }}</strong> other brilliant students. Every lesson completed and quiz aced gets you higher.</p>
+            </div>
+        </div>
+        <a href="{% url 'student:learning' %}" class="px-10 py-5 bg-white text-gray-900 font-black rounded-[2rem] hover:bg-indigo-50 transition-all transform hover:-translate-y-2 hover:shadow-xl hover:shadow-indigo-500/20 active:scale-95 italic relative z-10 text-lg group-hover:scale-105 duration-300">
+            Earn More Points ⚡
+        </a>
+        
+        <!-- Decorative Elements -->
+        <div class="absolute top-[-40%] right-[-10%] w-96 h-96 bg-indigo-500/20 rounded-full blur-[80px] group-hover:scale-110 transition-transform duration-1000"></div>
+        <div class="absolute bottom-[-30%] left-[5%] w-64 h-64 bg-purple-500/20 rounded-full blur-[60px] group-hover:scale-125 transition-transform duration-1000"></div>
+        <div class="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 z-0 pointer-events-none"></div>
+    </div>
+</div>
+{% endblock %}

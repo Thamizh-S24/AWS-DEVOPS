@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}Live Classroom Console - Learn Hub{% endblock %}
+{% block page_title %}Virtual Classroom Terminal{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-black text-gray-900 italic tracking-tight uppercase">Live Session Control 🛰️</h2>
+            <p class="text-gray-400 font-medium italic">Managing: {{ schedule.course.title }} ({{ schedule.get_day_of_week_display }})</p>
+        </div>
+        <div class="flex gap-4">
+            <a href="{{ schedule.meeting_link }}" target="_blank" class="px-8 py-4 bg-indigo-600 text-white text-xs font-black rounded-3xl hover:bg-indigo-700 transition-all uppercase italic shadow-xl shadow-indigo-100 flex items-center gap-2">
+                <i data-lucide="video" class="w-4 h-4"></i>
+                Launch Video Stream
+            </a>
+            <button class="px-8 py-4 bg-gray-900 text-white text-xs font-black rounded-3xl hover:bg-black transition-all uppercase italic shadow-xl shadow-gray-100 flex items-center gap-2">
+                <i data-lucide="stop-circle" class="w-4 h-4 text-red-400"></i>
+                End Session
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Live Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Live Stream Placeholder / Visualizer -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="aspect-video bg-gray-950 rounded-[2.5rem] relative overflow-hidden shadow-2xl group border-4 border-indigo-500/10">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center animate-pulse">
+                            <i data-lucide="mic" class="w-8 h-8 text-indigo-400"></i>
+                        </div>
+                        <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest italic animate-bounce">System Ready for Broadcast</p>
+                    </div>
+                </div>
+                <!-- Mini Overlays -->
+                <div class="absolute bottom-6 left-6 flex gap-4">
+                    <div class="bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10">
+                        <p class="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-1">Status</p>
+                        <p class="text-xs text-white font-black italic">CONNECTED</p>
+                    </div>
+                </div>
+                <div class="absolute top-6 right-6">
+                    <div class="flex gap-2">
+                        <button class="p-3 bg-white/10 hover:bg-indigo-600 transition-colors rounded-xl backdrop-blur-md border border-white/10 text-white"><i data-lucide="monitor" class="w-4 h-4"></i></button>
+                        <button class="p-3 bg-white/10 hover:bg-indigo-600 transition-colors rounded-xl backdrop-blur-md border border-white/10 text-white"><i data-lucide="presentation" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Presenter Tools -->
+            <div class="grid grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center gap-3">
+                    <i data-lucide="files" class="w-6 h-6 text-indigo-500"></i>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Share Slides</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center gap-3 hover:bg-indigo-50 cursor-pointer transition-colors group">
+                    <i data-lucide="user-plus" class="w-6 h-6 text-gray-400 group-hover:text-indigo-600"></i>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Invite Guest</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center gap-3">
+                    <i data-lucide="pen-tool" class="w-6 h-6 text-gray-400"></i>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Whiteboard</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Live Participants & Chat -->
+        <div class="space-y-8">
+            <!-- Attendance -->
+            <div class="bg-white rounded-[2rem] border border-gray-100 shadow-xl p-8">
+                <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest italic mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                    Live Participants
+                </h3>
+                <div class="space-y-4 max-h-60 overflow-y-auto no-scrollbar">
+                    {% for enrollment in schedule.course.enrollments.all|slice:":10" %}
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <img src="https://ui-avatars.com/api/?name={{ enrollment.student.username }}&background=6366f1&color=fff" class="w-8 h-8 rounded-xl">
+                            <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-black text-gray-900 italic">{{ enrollment.student.get_full_name|default:enrollment.student.username }}</p>
+                            <p class="text-[9px] text-gray-400 font-medium uppercase tracking-tighter italic">Joined 5m ago</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Chat Mock -->
+            <div class="bg-gray-900 rounded-[2.5rem] p-8 shadow-2xl flex flex-col h-80">
+                <h3 class="text-xs font-black text-indigo-400 uppercase tracking-widest italic mb-6">Class Relay 💬</h3>
+                <div class="flex-1 space-y-4 overflow-y-auto no-scrollbar text-[11px]">
+                    <div class="text-gray-500"><span class="font-black text-indigo-400">STUDENT:</span> Is the recording available?</div>
+                    <div class="text-gray-500"><span class="font-black text-indigo-400">STUDENT:</span> Can you repeat the last part?</div>
+                    <div class="text-gray-300 italic">... Waiting for more messages ...</div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-800">
+                    <input type="text" placeholder="Type message..." class="w-full bg-transparent text-white text-[11px] outline-none placeholder:text-gray-700 italic">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

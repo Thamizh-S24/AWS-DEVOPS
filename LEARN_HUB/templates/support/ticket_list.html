@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Support Tickets - Learn Hub{% endblock %}
+{% block page_title %}Support Hub{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-6xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-black text-gray-900 italic tracking-tight italic">Support Tickets 🛠️</h2>
+            <p class="text-gray-400 font-medium mt-1 uppercase tracking-widest text-[10px]">
+                {% if user.is_admin %}Internal platform management and user assistance.{% else %}Track your requests and technical issues.{% endif %}
+            </p>
+        </div>
+        {% if not user.is_admin %}
+        <a href="{% url 'support:ticket_create' %}" class="px-6 py-3 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all transform hover:-translate-y-1 active:scale-95 text-sm italic">
+            + New Ticket
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Status Stats (Admin Only) -->
+    {% if user.is_admin %}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {% with open_count=tickets|dictsort:"status"|last %}
+        {# Simplified stats for now #}
+        {% endwith %}
+    </div>
+    {% endif %}
+
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/50 border-b border-gray-100">
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">ID & Subject</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Category</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Priority</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Status</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest italic text-right">Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    {% for ticket in tickets %}
+                    <tr class="hover:bg-gray-50/80 transition-all group cursor-pointer" onclick="window.location='{% url 'support:ticket_detail' ticket.pk %}'">
+                        <td class="px-6 py-5">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-black text-indigo-400 italic">#{{ ticket.pk }}</span>
+                                <div>
+                                    <p class="text-sm font-black text-gray-900 group-hover:text-indigo-600 transition-colors italic line-clamp-1">{{ ticket.subject }}</p>
+                                    {% if user.is_admin %}
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">By {{ ticket.user.username }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-5">
+                            <span class="text-[10px] font-black text-gray-500 uppercase tracking-wider bg-gray-100 px-2.5 py-1 rounded-lg">
+                                {{ ticket.get_category_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-5">
+                            {% if ticket.priority == 'URGENT' %}
+                            <span class="text-[10px] font-black text-red-600 uppercase tracking-wider bg-red-50 border border-red-100 px-2.5 py-1 rounded-lg">Urgent 🔥</span>
+                            {% elif ticket.priority == 'HIGH' %}
+                            <span class="text-[10px] font-black text-orange-600 uppercase tracking-wider bg-orange-50 border border-orange-100 px-2.5 py-1 rounded-lg">High ⚡</span>
+                            {% elif ticket.priority == 'MEDIUM' %}
+                            <span class="text-[10px] font-black text-blue-600 uppercase tracking-wider bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-lg">Medium</span>
+                            {% else %}
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-wider bg-gray-50 border border-gray-100 px-2.5 py-1 rounded-lg">Low</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-5">
+                            {% if ticket.status == 'OPEN' %}
+                            <span class="flex items-center gap-1.5 text-xs font-bold text-green-600"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Open</span>
+                            {% elif ticket.status == 'IN_PROGRESS' %}
+                            <span class="flex items-center gap-1.5 text-xs font-bold text-indigo-600"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span> In Progress</span>
+                            {% elif ticket.status == 'RESOLVED' %}
+                            <span class="flex items-center gap-1.5 text-xs font-bold text-gray-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Resolved</span>
+                            {% else %}
+                            <span class="flex items-center gap-1.5 text-xs font-bold text-gray-300"><i data-lucide="lock" class="w-3.5 h-3.5"></i> Closed</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-5 text-right">
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{{ ticket.updated_at|timesince }} ago</p>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-20 text-center">
+                            <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gray-100">
+                                <i data-lucide="life-buoy" class="w-8 h-8 text-gray-300"></i>
+                            </div>
+                            <h3 class="text-gray-900 font-black italic">No tickets found</h3>
+                            <p class="text-gray-400 text-xs font-medium uppercase tracking-widest mt-1">{% if user.is_admin %}The queue is empty! Great job.{% else %}Need help? Create a ticket above.{% endif %}</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

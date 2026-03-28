@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard - Learn Hub{% endblock %}
+{% block page_title %}Student Hub{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% include 'student/premium_styles.html' %}
+{% endblock %}
+
+{% block content %}
+<!-- Animated Background Orbs -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] rounded-full bg-gradient-to-br from-indigo-300/30 to-purple-300/30 blur-[100px] orb-slow"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tr from-blue-300/30 to-teal-200/30 blur-[120px] orb-fast"></div>
+    <div class="absolute top-[40%] left-[20%] w-[30vw] h-[30vw] rounded-full bg-gradient-to-tr from-rose-200/20 to-orange-200/20 blur-[90px] orb-slow" style="animation-delay: -5s;"></div>
+</div>
+
+<div class="relative z-10 p-4 sm:p-8 max-w-[90rem] mx-auto space-y-8">
+    
+    <!-- Hero Section -->
+    <div class="glass-card premium-hero rounded-[3rem] p-10 sm:p-14 relative overflow-hidden group">
+        <div class="absolute inset-0 bg-white/20 backdrop-blur-sm z-0"></div>
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-indigo-500/10 to-transparent rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3"></div>
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+                <span class="px-5 py-2 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-[10px] font-black tracking-widest uppercase shadow-sm inline-block mb-6 relative">
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-indigo-500 rounded-full animate-ping -mr-1 -mt-1"></span>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-indigo-500 rounded-full -mr-1 -mt-1"></span>
+                    AI Enhanced Experience
+                </span>
+                <h2 class="text-5xl sm:text-6xl font-black italic tracking-tighter text-gray-900 mb-5 leading-tight">Hello, <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 drop-shadow-sm">{{ user.first_name|default:user.username }}</span> 👋</h2>
+                <p class="text-gray-600 font-bold text-lg max-w-lg mb-10 leading-relaxed text-balance">You're making great progress. Your neural career pathways show high potential based on your <strong class="text-indigo-600">{{ achievements.count }} unlocked achievements</strong>.</p>
+                <div class="flex flex-wrap gap-5">
+                    <a href="{% url 'student:learning' %}" class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white font-black rounded-[1.5rem] hover:from-black hover:to-gray-900 transition-all transform hover:-translate-y-1 shadow-xl shadow-gray-900/30 italic text-lg group/btn border border-gray-700">
+                        Back to Learning <i data-lucide="arrow-right" class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="{% url 'career_hub:hub' %}" class="flex items-center gap-3 px-8 py-4 bg-white text-gray-900 border-2 border-gray-200 font-black rounded-[1.5rem] hover:bg-gray-50 hover:border-gray-300 transition-all transform hover:-translate-y-1 shadow-lg shadow-gray-200/50 italic text-lg">
+                        Explore Careers
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hidden lg:flex justify-end relative">
+                <div class="w-72 h-72 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-[2.5rem] flex items-center justify-center p-1.5 relative z-10 shadow-[0_20px_50px_rgba(99,102,241,0.4)] transform rotate-3 hover:rotate-0 transition-transform duration-500 cursor-crosshair group/chart">
+                    <div class="w-full h-full bg-white rounded-[2.3rem] flex items-center justify-center overflow-hidden relative border-4 border-white">
+                        <div class="absolute inset-0 bg-gray-50/50 z-0"></div>
+                        <canvas id="heroChart" class="w-full h-full p-6 relative z-10 transform group-hover/chart:scale-105 transition-transform duration-700"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20 mt-2">
+                            <span class="text-5xl font-black text-gray-900 italic drop-shadow-md">{{ total_enrolled }}</span>
+                            <span class="text-[11px] font-black text-indigo-600 uppercase tracking-widest mt-1">Courses</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Floating Stats Card -->
+                <div class="absolute top-6 -left-12 w-40 bg-white/90 backdrop-blur-xl border-2 border-green-100 rounded-[1.5rem] p-5 shadow-2xl translate-y-8 animate-[bounce_4s_infinite] z-20 hover:scale-105 transition-transform">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-gradient-to-br from-green-400 to-emerald-500 text-white rounded-xl shadow-lg shadow-green-500/30"><i data-lucide="trending-up" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1.5">Actively</p>
+                            <p class="font-black italic text-gray-900 text-xl leading-none">{{ active_studying }} <span class="text-sm">Now</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        
+        <!-- Left Column (Wider) -->
+        <div class="xl:col-span-2 space-y-8">
+            
+            <!-- Analytics Overview row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Chart Card View -->
+                <div class="glass-card premium-analytics rounded-[2.5rem] p-8 flex flex-col justify-between group overflow-hidden relative">
+                    <div class="absolute top-[-50%] right-[-50%] w-full h-full bg-gradient-to-bl from-indigo-100/50 to-transparent rotate-45 pointer-events-none group-hover:translate-y-10 transition-transform duration-1000"></div>
+                    <div class="relative z-10 flex justify-between items-start mb-8">
+                        <div>
+                            <h3 class="text-xl font-black italic text-gray-900 mb-1 tracking-tight">Activity Graph</h3>
+                            <p class="text-xs font-bold text-gray-400 tracking-wide">Last 7 Days Study Hours</p>
+                        </div>
+                        <p class="text-[11px] font-black text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg shadow-sm">🚀 +14% Growth</p>
+                    </div>
+                    <div class="h-56 w-full mt-auto relative z-10 drop-shadow-sm">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- My Courses List -->
+                <div class="glass-card premium-focus rounded-[2.5rem] p-8 flex flex-col relative overflow-hidden">
+                    <div class="absolute block w-32 h-32 bg-purple-200/40 rounded-full blur-3xl -bottom-10 -right-10 pointer-events-none"></div>
+                    <div class="relative z-10 flex items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-xl font-black text-gray-900 italic tracking-tight">Current Focus 🎯</h3>
+                            <p class="text-xs font-bold text-gray-500 tracking-wide mt-1">Jump right back in</p>
+                        </div>
+                        <a href="{% url 'student:learning' %}" class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-indigo-600 hover:border-indigo-200 shadow-sm transition-all transform hover:scale-110"><i data-lucide="external-link" class="w-5 h-5"></i></a>
+                    </div>
+                    
+                    <div class="relative z-10 flex-1 overflow-y-auto no-scrollbar space-y-4 max-h-64 pr-2">
+                        {% for enr in enrollments %}
+                        <div class="group relative bg-white border border-gray-100/80 rounded-[1.5rem] p-4 hover:border-indigo-200 shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer transform hover:-translate-y-1" onclick="window.location='{% url 'learning:course_dashboard' enr.course.id %}'">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-xl bg-indigo-50 flex-shrink-0 overflow-hidden relative border border-indigo-100/50">
+                                    {% if enr.course.thumbnail %}
+                                    <img src="{{ enr.course.thumbnail.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    {% else %}
+                                    <div class="w-full h-full flex items-center justify-center text-indigo-500"><i data-lucide="book-open" class="w-6 h-6"></i></div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1 overflow-hidden">
+                                    <h4 class="font-black text-sm text-gray-900 truncate group-hover:text-indigo-600 transition-colors italic leading-tight">{{ enr.course.title }}</h4>
+                                    <div class="flex items-center gap-3 mt-2 w-full">
+                                        <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden inset-shadow-sm">
+                                            <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.6)]" style="width: {{ enr.progress }}%"></div>
+                                        </div>
+                                        <span class="text-[11px] font-black text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">{{ enr.progress }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="h-full flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-gray-200 rounded-[1.5rem] bg-white/50">
+                            <div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 mb-4 shadow-inner"><i data-lucide="book-dashed" class="w-7 h-7"></i></div>
+                            <p class="text-sm font-bold text-gray-500 italic">No courses in progress</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Recommendations Card -->
+            <div class="glass-card premium-ai rounded-[3rem] p-8 sm:p-10 relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none mix-blend-overlay"></div>
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl text-white shadow-xl shadow-purple-500/30 transform rotate-3 hover:rotate-0 transition-transform">
+                            <i data-lucide="cpu" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-black text-gray-900 italic tracking-tight drop-shadow-sm">Neural Matches</h3>
+                            <p class="text-xs font-bold text-gray-500 mt-1 uppercase tracking-widest">Powered by Deep Learning</p>
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur border border-purple-200/60 shadow-[inset_0_0_10px_rgba(168,85,247,0.1)] text-purple-700 rounded-xl text-[10px] font-black uppercase tracking-widest italic cursor-pointer self-start sm:self-auto">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(168,85,247,0.8)]"></span> Analyzing Data Vector
+                    </div>
+                </div>
+
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for course in recommended_courses %}
+                    <div class="group bg-white/95 backdrop-blur-sm rounded-[2rem] border border-indigo-100/60 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-300 transition-all duration-300 flex flex-col p-2 transform hover:-translate-y-2">
+                        <div class="relative h-40 rounded-[1.5rem] overflow-hidden bg-gray-100 border border-gray-100/50 inset-shadow-sm">
+                            {% if course.thumbnail %}
+                            <img src="{{ course.thumbnail.url }}" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110">
+                            {% else %}
+                            <div class="w-full h-full bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
+                                <i data-lucide="sparkles" class="w-10 h-10 text-indigo-300"></i>
+                            </div>
+                            {% endif %}
+                            <div class="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-gray-900/80 to-transparent flex items-end p-4">
+                                <div class="px-2 py-1 bg-black/40 backdrop-blur border border-white/20 rounded-md">
+                                    <p class="text-white text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5"><i data-lucide="target" class="w-3 h-3 text-green-400"></i> Match 98%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-2 border border-indigo-100 bg-indigo-50 inline-block w-max px-2 py-0.5 rounded-md shadow-sm">{{ course.category.name }}</span>
+                            <h4 class="font-black text-base text-gray-900 line-clamp-2 italic leading-tight group-hover:text-indigo-600 transition-colors drop-shadow-sm">{{ course.title }}</h4>
+                            <div class="mt-auto pt-5 flex items-center justify-between border-t border-gray-100/80">
+                                <span class="text-xs font-bold text-gray-500 flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-gray-400"></i> 30h Track</span>
+                                <a href="{% url 'learning:course_detail' course.id %}" class="p-2.5 bg-gray-50 border border-gray-200 text-indigo-600 hover:bg-indigo-600 hover:border-indigo-600 hover:text-white hover:shadow-lg hover:shadow-indigo-500/30 rounded-xl transition-all group/btn"><i data-lucide="arrow-right" class="w-4 h-4 group-hover/btn:translate-x-0.5 transition-transform"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full py-16 text-center bg-white/60 rounded-[2rem] border-2 border-dashed border-purple-200">
+                        <div class="w-16 h-16 bg-purple-50 text-purple-300 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-purple-100"><i data-lucide="search-x" class="w-8 h-8"></i></div>
+                        <p class="text-sm font-bold text-gray-500 italic">AI needs more behavioral data to construct recommendation matrices.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column (Sidebar-ish) -->
+        <div class="space-y-8">
+            
+            <!-- Achievements Showcase -->
+            <div class="glass-card premium-trophy rounded-[2.5rem] p-8 group">
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-lg font-black text-gray-900 italic drop-shadow-sm">Trophy Room 🏆</h3>
+                            <p class="text-[10px] uppercase font-bold text-yellow-700 tracking-widest mt-1">Your Legacy</p>
+                        </div>
+                        <a href="{% url 'student:leaderboard' %}" class="w-10 h-10 rounded-xl bg-white border border-yellow-200/50 flex items-center justify-center text-amber-600 hover:bg-yellow-100 shadow-sm transition-all hover:scale-110"><i data-lucide="arrow-up-right" class="w-5 h-5"></i></a>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        {% for ach in achievements|slice:":6" %}
+                        <div class="aspect-square bg-white rounded-2xl border border-yellow-200/60 shadow-[0_5px_15px_rgba(251,191,36,0.1)] hover:shadow-[0_10px_25px_rgba(251,191,36,0.3)] hover:border-yellow-400 flex flex-col items-center justify-center p-2 relative group/badge transform hover:-translate-y-2 transition-all cursor-crosshair">
+                            <div class="text-amber-500 mb-1 group-hover/badge:scale-110 transition-transform drop-shadow-[0_2px_4px_rgba(245,158,11,0.3)]">
+                                <i data-lucide="{{ ach.badge.icon_name }}" class="w-8 h-8"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-gray-900/95 backdrop-blur-sm text-white p-2 rounded-2xl opacity-0 group-hover/badge:opacity-100 flex flex-col items-center justify-center text-center transition-all duration-300 z-20 scale-90 group-hover/badge:scale-100 border border-gray-700">
+                                <span class="text-[9px] font-black uppercase leading-tight italic">{{ ach.badge.name }}</span>
+                                <span class="text-[7px] text-gray-400 mt-1 uppercase tracking-widest">Unlocked</span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-span-3 py-8 text-center bg-white/50 border border-dashed border-yellow-300 rounded-2xl">
+                            <p class="text-xs text-yellow-700 font-bold italic">The trophy case is empty.<br>Start earning today!</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mt-8 p-5 rounded-[1.5rem] bg-gradient-to-br from-gray-900 to-black border border-gray-800 text-white flex items-center justify-between group-hover:shadow-2xl group-hover:shadow-black/20 transition-all transform group-hover:-translate-y-1 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-yellow-500/10 blur-xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
+                        <div class="relative z-10">
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 shadow-sm">Global Rank</p>
+                            <p class="text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 drop-shadow-md">#{{ user_rank|default:"?" }}</p>
+                        </div>
+                        <div class="relative z-10 w-14 h-14 bg-gray-800 rounded-xl border border-gray-700 flex items-center justify-center shadow-inner">
+                            <i data-lucide="medal" class="w-8 h-8 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notice Board -->
+            <div class="glass-card premium-alerts rounded-[2.5rem] p-8">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 class="text-lg font-black text-gray-900 italic drop-shadow-sm">Important Alerts 🔔</h3>
+                        <p class="text-[10px] uppercase font-bold text-gray-400 tracking-widest mt-1">Stay Updated</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    {% for notice in notifications %}
+                    <div class="group relative bg-white border border-gray-100 p-5 rounded-[1.5rem] hover:border-red-200 transition-all shadow-sm hover:shadow-lg hover:shadow-red-500/5 cursor-pointer transform hover:-translate-x-1 hover:translate-y-[-2px]">
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 flex-shrink-0">
+                                <div class="w-2.5 h-2.5 rounded-full bg-red-500 group-hover:scale-150 transition-transform duration-300 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-sm font-black text-gray-900 italic leading-tight group-hover:text-red-600 transition-colors">{{ notice.notification.title }}</h4>
+                                <p class="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed font-medium">{{ notice.notification.message }}</p>
+                                <div class="mt-3 flex items-center gap-2">
+                                    <span class="text-[9px] font-black text-gray-400 bg-gray-100 px-2 py-0.5 rounded uppercase flex items-center gap-1.5"><i data-lucide="clock" class="w-3 h-3"></i> {{ notice.notification.created_at|timesince }} ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="py-10 text-center bg-gray-50 border border-dashed border-gray-200 rounded-[1.5rem]">
+                        <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-3"><i data-lucide="bell-off" class="w-6 h-6 text-gray-300"></i></div>
+                        <p class="text-xs font-bold text-gray-400 italic">No new alerts or notices.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+                    <a href="{% url 'notifications:list' %}" class="inline-flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-indigo-600 uppercase tracking-widest italic transition-colors bg-gray-50 hover:bg-indigo-50 px-4 py-2 rounded-xl group">
+                        View Complete Archive <i data-lucide="arrow-right" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Community Highlights -->
+            <div class="glass-card premium-community rounded-[2.5rem] p-8 hover:shadow-2xl transition-all cursor-pointer transform hover:-translate-y-1" onclick="window.location='{% url 'discussions:forum_list' %}'">
+                 <div class="flex items-center gap-4 mb-8">
+                    <div class="p-3 bg-gradient-to-br from-blue-400 to-sky-500 text-white rounded-[1.2rem] shadow-lg shadow-sky-500/30"><i data-lucide="message-square-quote" class="w-6 h-6"></i></div>
+                    <div>
+                        <h3 class="text-lg font-black text-gray-900 italic drop-shadow-sm">Hot Topics</h3>
+                        <p class="text-[10px] uppercase font-bold text-sky-600 tracking-widest mt-1">Community Pulse</p>
+                    </div>
+                 </div>
+                 <div class="space-y-4">
+                     {% for thread in recent_threads|slice:":3" %}
+                     <div class="p-4 bg-white/80 backdrop-blur rounded-[1.5rem] border border-sky-100 hover:bg-white hover:border-sky-300 transition-colors shadow-sm relative overflow-hidden group/topic">
+                         <div class="absolute left-0 top-0 bottom-0 w-1 bg-sky-200 group-hover/topic:bg-sky-500 transition-colors"></div>
+                         <h4 class="text-sm font-black text-gray-800 line-clamp-2 mb-3 leading-tight group-hover/topic:text-sky-700 transition-colors italic">{{ thread.title }}</h4>
+                         <div class="flex justify-between items-center border-t border-sky-50 pt-2">
+                             <span class="text-[9px] font-black text-sky-600 uppercase bg-sky-50 px-2 py-0.5 rounded border border-sky-100">{{ thread.category.name }}</span>
+                             <span class="text-[10px] font-bold text-gray-400 flex items-center gap-1.5"><i data-lucide="message-circle" class="w-3 h-3"></i> {{ thread.replies_count }}</span>
+                         </div>
+                     </div>
+                     {% empty %}
+                     <p class="text-xs text-gray-400 font-bold italic text-center py-6 bg-white/50 rounded-2xl border border-dashed border-sky-200">No active community discussions.</p>
+                     {% endfor %}
+                 </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize charts when DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        if(typeof lucide !== 'undefined') lucide.createIcons();
+
+        // Check if Chart is available
+        if(typeof Chart !== 'undefined') {
+            // Chart Default Options
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#9ca3af';
+
+            // Hero Mini Donut Chart
+            const ctxHero = document.getElementById('heroChart');
+            if(ctxHero){
+                const ctxH = ctxHero.getContext('2d');
+                new Chart(ctxH, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Completed', 'Enrolled'],
+                        datasets: [{
+                            data: [{{ completed_courses }}, {{ total_enrolled|default:1 }} - {{ completed_courses }}],
+                            backgroundColor: ['#4f46e5', '#e0e7ff'],
+                            borderWidth: 0,
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        cutout: '82%',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                        animation: { animateScale: true, animateRotate: true, duration: 2500, easing: 'easeOutBounce' }
+                    }
+                });
+            }
+
+            // Activity Line Chart
+            const ctxActivity = document.getElementById('activityChart');
+            if(ctxActivity){
+                const ctxA = ctxActivity.getContext('2d');
+                let gradientFill = ctxA.createLinearGradient(0, 0, 0, 250);
+                gradientFill.addColorStop(0, "rgba(99, 102, 241, 0.5)");
+                gradientFill.addColorStop(1, "rgba(99, 102, 241, 0.0)");
+
+                new Chart(ctxA, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Study Hours',
+                            data: [2, 3.5, 3, 5, 4.5, 7, 6],
+                            borderColor: '#4f46e5',
+                            borderWidth: 4,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#a855f7',
+                            pointBorderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 8,
+                            fill: true,
+                            backgroundColor: gradientFill,
+                            tension: 0.45
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                                titleFont: { size: 12, family: 'Inter', weight: 'black' },
+                                bodyFont: { size: 14, family: 'Inter', weight: 'bold' },
+                                padding: 12,
+                                displayColors: false,
+                                cornerRadius: 12,
+                                borderColor: 'rgba(99, 102, 241, 0.4)',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false }, border: { display: false }, ticks: {font: {weight: 'bold', size: 11}, color: '#6b7280'} },
+                            y: { 
+                                beginAtZero: true,
+                                border: { display: false },
+                                grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false },
+                                ticks: { display: false }
+                            }
+                        },
+                        interaction: { intersect: false, mode: 'index' },
+                        animation: { duration: 2000, easing: 'easeOutQuart' }
+                    }
+                });
+            }
+        }
+    });
+</script>
+{% endblock %}

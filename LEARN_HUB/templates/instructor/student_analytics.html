@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Student Analytics - Instructor{% endblock %}
+{% block page_title %}Student Tracking{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Enrollments</p>
+            <h3 class="text-3xl font-black text-gray-900">{{ total_enrolled }}</h3>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Completions</p>
+            <h3 class="text-3xl font-black text-green-600">{{ completed_count }}</h3>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Completion Rate</p>
+            <h3 class="text-3xl font-black text-indigo-600">{% if total_enrolled > 0 %}{{ completed_count|add:0|divisibleby:total_enrolled|yesno:"100,0" }}%{% else %}0%{% endif %}</h3>
+            <p class="text-[10px] text-gray-400 font-bold mt-1 italic">* Calculation placeholder</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-50 flex items-center justify-between">
+            <h3 class="text-lg font-black text-gray-900">Enrolled Students</h3>
+            <div class="flex gap-2">
+                <select class="px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold outline-none">
+                    <option>All Courses</option>
+                    {% for course in courses %}
+                    <option>{{ course.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50/50">
+                    <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Student</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Course</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Progress</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Enrolled on</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for enrollment in enrollments %}
+                <tr class="hover:bg-gray-50/50 transition-colors group">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <img class="w-8 h-8 rounded-full border-2 border-white shadow-sm" src="https://ui-avatars.com/api/?name={{ enrollment.student.username }}&background=6366f1&color=fff" alt="">
+                            <div>
+                                <p class="text-xs font-black text-gray-900">{{ enrollment.student.get_full_name|default:enrollment.student.username }}</p>
+                                <p class="text-[10px] text-gray-400 font-medium">{{ enrollment.student.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-xs font-bold text-gray-600">{{ enrollment.course.title }}</td>
+                    <td class="px-6 py-4">
+                        <div class="w-32">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-black text-indigo-600">{{ enrollment.progress }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-indigo-600 h-full rounded-full transition-all duration-1000" style="width: {{ enrollment.progress }}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-xs font-medium text-gray-500">{{ enrollment.enrolled_at|date:"M d, Y" }}</td>
+                    <td class="px-6 py-4 text-right">
+                        {% if enrollment.completed %}
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-[10px] font-black uppercase tracking-wider">Completed</span>
+                        {% else %}
+                        <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-lg text-[10px] font-black uppercase tracking-wider">In Progress</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center text-gray-400 font-bold italic">No students enrolled yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

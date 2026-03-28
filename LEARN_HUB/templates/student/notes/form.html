@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Learn Hub{% endblock %}
+{% block page_title %}Digital Notebook{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto space-y-8">
+    <div class="flex items-center gap-4 mb-2">
+        <a href="{% url 'student:note_list' %}" class="w-12 h-12 bg-gray-100 text-gray-500 rounded-2xl flex items-center justify-center hover:bg-gray-200 transition-colors shadow-sm"><i data-lucide="arrow-left" class="w-5 h-5"></i></a>
+        <div>
+            <h2 class="text-3xl font-black text-gray-900 italic tracking-tight">{{ title }} ✍️</h2>
+            <p class="text-gray-400 font-medium">Capture your thoughts while they are fresh.</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[3rem] border border-gray-100 shadow-2xl shadow-gray-200/50 p-10 relative overflow-hidden">
+        <!-- Decorative Gradient -->
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-60"></div>
+        
+        <form method="post" class="space-y-8 relative z-10">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest italic ml-1">Related Course (Optional)</label>
+                    {{ form.course }}
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest italic ml-1">Privacy Status</label>
+                    <div class="flex items-center gap-4 p-3 bg-gray-50 border border-gray-100 rounded-xl">
+                        <div class="flex items-center gap-3">
+                            {{ form.is_secured }}
+                            <span class="text-sm font-bold text-gray-700 italic">Secure with Biometrics</span>
+                        </div>
+                        <i data-lucide="fingerprint" class="w-4 h-4 text-red-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest italic ml-1">Note Title *</label>
+                {{ form.title }}
+            </div>
+            
+            <div class="space-y-2">
+                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest italic ml-1">Your Insights *</label>
+                {{ form.content }}
+            </div>
+
+            <div class="pt-6 border-t border-gray-50 flex items-center justify-between">
+                <p class="text-[10px] text-gray-400 font-medium italic">* Indicates required field</p>
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'student:note_list' %}" class="px-6 py-3 text-gray-500 font-black text-sm uppercase italic hover:text-gray-900 transition-colors">Cancel</a>
+                    <button type="submit" class="px-10 py-4 bg-indigo-600 text-white font-black rounded-[2rem] hover:bg-indigo-700 transition-all transform hover:-translate-y-1 shadow-xl shadow-indigo-100 italic">
+                        {% if note %}Update Insight{% else %}Save Note{% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

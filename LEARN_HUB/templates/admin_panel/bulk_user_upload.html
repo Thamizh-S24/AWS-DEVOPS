@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Bulk User Upload - Admin Hub{% endblock %}
+{% block page_title %}Bulk User Upload{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-4xl mx-auto space-y-6">
+    <!-- Back Link -->
+    <a href="{% url 'admin_panel:users' %}" class="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to User Management
+    </a>
+
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden p-10">
+        <div class="mb-8">
+            <h2 class="text-3xl font-black text-gray-900 italic tracking-tight italic">Bulk User Import 👥</h2>
+            <p class="text-gray-400 font-medium mt-1 uppercase tracking-widest text-[10px]">Import multiple users into the system via CSV file.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <!-- Instructions -->
+            <div class="space-y-6">
+                <div class="bg-indigo-50/50 rounded-2xl p-6 border border-indigo-100">
+                    <h3 class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-4 italic">CSV Format Requirements</h3>
+                    <ul class="space-y-3 text-xs font-medium text-gray-600">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-green-500 mt-0.5"></i>
+                            <span>The first row should be the header (skipped by importer).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-green-500 mt-0.5"></i>
+                            <span>Columns must be: <code class="bg-indigo-100 px-1.5 py-0.5 rounded text-indigo-700">username, email, first_name, last_name, role</code></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-green-500 mt-0.5"></i>
+                            <span>Valid roles are: <code class="bg-indigo-100 px-1.5 py-0.5 rounded text-indigo-700">STUDENT, INSTRUCTOR, ADMIN</code></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="info" class="w-4 h-4 text-indigo-400 mt-0.5"></i>
+                            <span>Default password will be set to: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-gray-700">LearnHub2026!</code></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                    <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 italic">Sample CSV Row</h3>
+                    <code class="block text-[10px] font-mono text-gray-500 bg-white p-3 border border-gray-100 rounded-lg">
+                        jdoe, john@example.com, John, Doe, STUDENT
+                    </code>
+                </div>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="flex flex-col justify-center">
+                <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                    {% csrf_token %}
+                    <div class="relative group">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 italic">Select CSV File *</label>
+                        <div class="relative flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-3xl p-10 group-hover:border-indigo-400 transition-all cursor-pointer bg-gray-50/30">
+                            <i data-lucide="upload-cloud" class="w-12 h-12 text-gray-300 group-hover:text-indigo-500 transition-colors mb-4"></i>
+                            <p class="text-xs font-bold text-gray-500 group-hover:text-indigo-600 transition-colors">Click to browse or drag & drop</p>
+                            <input type="file" name="csv_file" accept=".csv" required class="absolute inset-0 opacity-0 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-5 bg-indigo-600 text-white font-black rounded-3xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all transform hover:-translate-y-1 active:scale-95 text-lg italic">
+                        Start Upload 🚀
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

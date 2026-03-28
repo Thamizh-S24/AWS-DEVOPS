@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}{% if course %}Edit{% else %}Create{% endif %} Course - Instructor{% endblock %}
+{% block page_title %}My Courses{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-2xl mx-auto space-y-6">
+  <div class="flex items-center gap-4 mb-6">
+    <a href="{% url 'instructor:courses' %}" class="w-10 h-10 bg-gray-100 text-gray-500 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i></a>
+    <div>
+      <h2 class="text-2xl font-black text-gray-900">{% if course %}Edit Course{% else %}Create New Course{% endif %}</h2>
+      <p class="text-gray-500 text-sm mt-1">{% if course %}Update your course details.{% else %}Set up a new course syllabus.{% endif %}</p>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 relative overflow-hidden">
+    <form method="post" enctype="multipart/form-data" class="space-y-6 relative z-10">
+      {% csrf_token %}
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 mb-2">Course Title *</label>
+        <input type="text" name="title" value="{{ course.title|default:'' }}" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white transition-all">
+      </div>
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 mb-2">Description</label>
+        <textarea name="description" rows="4" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl resize-none text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white transition-all">{{ course.description|default:'' }}</textarea>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 mb-2">Course Thumbnail</label>
+        <div class="flex items-center gap-4">
+          <div class="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0">
+            {% if course.thumbnail %}
+              <img src="{{ course.thumbnail.url }}" class="w-full h-full object-cover" id="thumbnail-preview">
+            {% else %}
+              <div class="w-full h-full flex items-center justify-center bg-indigo-50 text-indigo-300" id="thumbnail-placeholder">
+                <i data-lucide="image" class="w-8 h-8"></i>
+              </div>
+              <img src="" class="w-full h-full object-cover hidden" id="thumbnail-preview">
+            {% endif %}
+          </div>
+          <div class="flex-1">
+            <input type="file" name="thumbnail" accept="image/*" class="hidden" id="course-thumbnail-input" onchange="previewThumbnail(this)">
+            <button type="button" onclick="document.getElementById('course-thumbnail-input').click()" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-50 transition-all flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i> Choose Image
+            </button>
+            <p class="text-[10px] text-gray-400 mt-2 italic">Recommended: 800x450px (16:9). Max 2MB.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-2">Category *</label>
+          <select name="category_id" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white transition-all">
+            <option value="" disabled selected>-- Select Category --</option>
+            {% for cat in categories %}
+              <option value="{{ cat.pk }}" {% if course and course.category.pk == cat.pk %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-2">Status *</label>
+          <select name="status" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:bg-white transition-all">
+            {% for val, label in status_choices %}
+              <option value="{{ val }}" {% if course and course.status == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <p class="text-[10px] sm:text-xs text-gray-400 mt-1">Note: Courses must be published by Admin.</p>
+        </div>
+      </div>
+
+      <div class="pt-4 flex items-center justify-between">
+        {% if course %}
+          <button type="submit" formaction="{% url 'instructor:course_delete' course.pk %}" class="px-5 py-3 text-red-600 font-bold bg-red-50 hover:bg-red-100 rounded-xl text-sm transition-colors" onclick="return confirm('Are you sure you want to delete this course? All related data will be lost.')">
+            <i data-lucide="trash-2" class="w-4 h-4 inline-block align-text-bottom mr-1"></i> Delete
+          </button>
+        {% else %}
+          <div></div> <!-- spacer -->
+        {% endif %}
+        <button type="submit" class="px-8 py-3 bg-indigo-600 text-white text-sm font-black tracking-wide rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2">
+          {% if course %}Save Changes{% else %}Create Course{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function previewThumbnail(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('thumbnail-preview');
+      const placeholder = document.getElementById('thumbnail-placeholder');
+      preview.src = e.target.result;
+      preview.classList.remove('hidden');
+      if (placeholder) placeholder.classList.add('hidden');
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+{% endblock %}
