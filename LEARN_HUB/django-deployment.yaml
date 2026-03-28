@@ -1,0 +1,19 @@
+  apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learnhub
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: learnhub
+  template:
+    metadata:
+      labels:
+        app: learnhub
+    spec:
+      containers:
+      - name: learnhub
+        image: thamizh2026devops/learnhub:latest
+        ports:
+        - containerPort: 8000
