@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}New Discussion - Forum{% endblock %}
+{% block page_title %}Start Discussion{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-4xl mx-auto space-y-6">
+    <!-- Back Link -->
+    <a href="{% url 'discussions:forum_list' %}" class="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Forum
+    </a>
+
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden p-10">
+        <div class="mb-8">
+            <h2 class="text-3xl font-black text-gray-900 italic tracking-tight italic">Share your thoughts 💭</h2>
+            <p class="text-gray-400 font-medium mt-1 uppercase tracking-widest text-[10px]">Start a new conversation with the community.</p>
+        </div>
+
+        <form action="{% url 'discussions:thread_create' %}" method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Category Selection -->
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 italic">Category *</label>
+                    <select name="category_id" required class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 cursor-pointer appearance-none">
+                        <option value="" disabled selected>-- Select Category --</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.pk }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Course Linking (Optional) -->
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 italic">Link to Course (Optional)</label>
+                    <div class="relative">
+                        <select name="course_id" class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 cursor-pointer appearance-none">
+                            <option value="">-- No Course Link --</option>
+                            {% if initial_course %}
+                            <option value="{{ initial_course.pk }}" selected>{{ initial_course.title }} (Selected)</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thread Title -->
+            <div>
+                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 italic">Title *</label>
+                <input type="text" name="title" required class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 placeholder:text-gray-300" placeholder="e.g., How to implement AI Quiz Generator?">
+            </div>
+
+            <!-- Thread Content -->
+            <div>
+                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 italic">Discussion Content *</label>
+                <textarea name="content" rows="6" required class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 placeholder:text-gray-300 transition-all" placeholder="Provide details, ask questions, or share your knowledge..."></textarea>
+            </div>
+
+            <!-- Submit -->
+            <div class="pt-4">
+                <button type="submit" class="w-full py-5 bg-indigo-600 text-white font-black rounded-3xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all transform hover:-translate-y-1 active:scale-95 text-lg italic">
+                    Launch Discussion ✨
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}My Credentials - Learn Hub{% endblock %}
+{% block page_title %}Professional Certificates{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-12">
+    <div class="relative overflow-hidden bg-gray-900 rounded-[3rem] p-12 text-white shadow-2xl">
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4">
+                <hgroup>
+                    <h2 class="text-4xl font-black italic tracking-tighter">Your Professional Assets 📜</h2>
+                    <p class="text-gray-400 font-medium mt-2 max-w-lg">Validated proofs of your expertise, ready for the world. Download and share your success.</p>
+                </hgroup>
+                <div class="flex items-center gap-4">
+                    <div class="px-4 py-2 bg-white/5 rounded-xl border border-white/10 flex items-center gap-2">
+                        <span class="text-indigo-400 font-black italic">{{ certificates.count }}</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-gray-400">Certificates Earned</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-32 h-32 bg-indigo-600 rounded-[2.5rem] flex items-center justify-center shadow-2xl shadow-indigo-900/40 rotate-12">
+                <i data-lucide="award" class="w-16 h-16 text-white/80"></i>
+            </div>
+        </div>
+        <!-- Decorative Blurs -->
+        <div class="absolute -top-24 -right-24 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Certificates Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for cert in certificates %}
+        <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-gray-200/50 overflow-hidden group hover:border-indigo-200 transition-all flex flex-col relative">
+            <!-- Fancy Background Header -->
+            <div class="h-32 bg-gray-50 relative overflow-hidden flex items-center justify-center">
+                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-600/10"></div>
+                 <div class="relative z-10 w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
+                    <i data-lucide="graduation-cap" class="w-8 h-8"></i>
+                 </div>
+                 <!-- Decorative pattern -->
+                 <div class="absolute bottom-0 right-0 w-24 h-24 bg-white/40 rounded-full -mb-12 -mr-12 blur-2xl"></div>
+            </div>
+
+            <div class="p-8 space-y-6 flex-1 flex flex-col">
+                <div>
+                    <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest italic mb-2 block">Official Credential</span>
+                    <h3 class="text-xl font-black text-gray-900 italic leading-tight group-hover:text-indigo-600 transition-colors">{{ cert.course.title }}</h3>
+                </div>
+
+                <div class="space-y-4 flex-1">
+                    <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest italic">
+                        <span class="text-gray-400">Issue Date</span>
+                        <span class="text-gray-900">{{ cert.issued_at|date:"d M Y" }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest italic">
+                        <span class="text-gray-400">ID Reference</span>
+                        <span class="text-gray-900 font-mono">{{ cert.certificate_id|stringformat:"s"|slice:":8" }}...</span>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-gray-50">
+                    <a href="{% url 'certificates:download' cert.certificate_id %}" class="w-full py-4 bg-gray-100 text-gray-900 font-black rounded-2xl hover:bg-indigo-600 hover:text-white transition-all flex items-center justify-center gap-3 italic shadow-sm group/btn">
+                        <span>Download PDF</span>
+                        <i data-lucide="download" class="w-4 h-4 group-hover/btn:translate-y-0.5 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-24 bg-white rounded-[3rem] border-2 border-dashed border-gray-100 flex flex-col items-center justify-center text-center">
+            <div class="w-24 h-24 bg-indigo-50 rounded-[2rem] flex items-center justify-center mb-8 rotate-3">
+                <i data-lucide="file-question" class="w-12 h-12 text-indigo-200"></i>
+            </div>
+            <h3 class="text-2xl font-black text-gray-900 italic mb-3">No Credentials Yet 🏆</h3>
+            <p class="text-gray-400 font-medium max-w-sm">Certificates are earned upon completing a course with excellence. Keep studying to build your portfolio!</p>
+            <a href="{% url 'student:learning' %}" class="mt-10 px-10 py-5 bg-indigo-600 text-white font-black rounded-[2rem] hover:bg-indigo-700 transition-all transform hover:-translate-y-1 shadow-2xl shadow-indigo-100 italic">
+                Back to Learning
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

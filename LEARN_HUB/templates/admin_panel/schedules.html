@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Timetable Management - Admin{% endblock %}
+{% block page_title %}Timetable & Schedules{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-black text-gray-900 italic">Weekly Timetable 🗓️</h2>
+            <p class="text-gray-500 text-sm">Manage class schedules and room assignments across all courses.</p>
+        </div>
+        <a href="{% url 'admin_panel:schedule_create' %}" class="px-5 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-sm hover:shadow-md transition-all">+ Add Slot</a>
+    </div>
+
+    <!-- Day Filters -->
+    <div class="flex flex-wrap gap-2">
+        <a href="{% url 'admin_panel:schedules' %}" class="px-4 py-2 rounded-lg text-sm font-bold {% if not day_filter %}bg-indigo-600 text-white shadow-md{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %}">Show All</a>
+        {% for code, label in day_choices %}
+        <a href="?day={{ code }}" class="px-4 py-2 rounded-lg text-sm font-bold {% if day_filter == code %}bg-indigo-600 text-white shadow-md{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+
+    <!-- Schedule List -->
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-100">
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Time Slot</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Day</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Course</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Location / Link</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    {% for schedule in schedules %}
+                    <tr class="hover:bg-gray-50/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <span class="text-sm font-black text-gray-900 italic">{{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-xs font-bold text-gray-600">{{ schedule.get_day_of_week_display }}</td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'admin_panel:course_detail' schedule.course.pk %}" class="text-sm font-bold text-indigo-600 hover:text-indigo-800 hover:underline">{{ schedule.course.title }}</a>
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if schedule.meeting_link %}
+                            <a href="{{ schedule.meeting_link }}" target="_blank" class="flex items-center gap-1 text-xs font-bold text-green-600 hover:underline">
+                                <i data-lucide="video" class="w-3 h-3"></i> Virtual Class
+                            </a>
+                            {% else %}
+                            <span class="text-xs font-bold text-gray-400 italic">Room {{ schedule.room_number|default:"N/A" }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <form action="{% url 'admin_panel:schedule_delete' schedule.pk %}" method="post" onsubmit="return confirm('Remove this schedule slot?')">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-400 hover:text-red-600 transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-400 italic text-sm">No schedules found. Click '+ Add Slot' to begin.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

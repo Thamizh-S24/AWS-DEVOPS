@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Institutional Document Hub - Admin{% endblock %}
+{% block page_title %}Resources Hub{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-black text-gray-900 italic">Global Resource Library 📚</h2>
+            <p class="text-gray-500 text-sm">Upload handbooks, policies, and official templates for all users.</p>
+        </div>
+        <a href="{% url 'admin_panel:document_create' %}" class="px-5 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-sm hover:shadow-md transition-all">+ Upload Doc</a>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="flex flex-wrap gap-2 text-xs">
+        <a href="{% url 'admin_panel:documents' %}" class="px-4 py-2 rounded-lg font-bold {% if not category_filter %}bg-indigo-600 text-white shadow-md{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %} tracking-wider uppercase">All Files</a>
+        {% for code, label in category_choices %}<a href="?category={{ code }}" class="px-4 py-2 rounded-lg font-bold {% if category_filter == code %}bg-indigo-600 text-white shadow-md{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %} tracking-wider uppercase">{{ label }}</a>{% endfor %}
+    </div>
+
+    <!-- Documents Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for doc in documents %}
+        <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-2 py-1 bg-gray-50 text-gray-400 text-[10px] font-black tracking-widest uppercase border border-gray-100 rounded-lg italic">{{ doc.get_category_display }}</span>
+                    {% if not doc.is_public %}
+                    <span class="p-1 px-2 bg-amber-50 text-amber-500 text-[8px] font-bold rounded-full uppercase tracking-widest flex items-center gap-1 border border-amber-100"><i data-lucide="lock" class="w-2 h-2"></i> Private</span>
+                    {% endif %}
+                </div>
+                <h3 class="text-lg font-black text-gray-900 line-clamp-2 mb-2 italic">" {{ doc.title }} "</h3>
+                <p class="text-xs text-gray-400 font-medium line-clamp-2 mb-4">{{ doc.description|default:"No description provided." }}</p>
+                
+                <div class="flex items-center justify-between py-4 border-t border-gray-50">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-indigo-500"></i></div>
+                        <div>
+                            <p class="text-[9px] font-black text-gray-300 tracking-wider">UPLOADER</p>
+                            <p class="text-[10px] font-bold text-gray-600">{{ doc.uploaded_by.username }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="{{ doc.file.url }}" download class="w-8 h-8 bg-black text-white rounded-xl flex items-center justify-center hover:bg-gray-800 transition-colors">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                        </a>
+                        <form action="{% url 'admin_panel:document_delete' doc.pk %}" method="post" onsubmit="return confirm('Permanently delete this document?')">
+                            {% csrf_token %}
+                            <button type="submit" class="w-8 h-8 bg-red-50 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-100 transition-colors">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <p class="text-[9px] text-right font-black text-gray-300 tracking-wider uppercase">Modified: {{ doc.uploaded_at|date:"d M Y" }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-20 text-center bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 text-gray-400 font-bold italic shadow-inner">
+            <i data-lucide="file-minus" class="w-12 h-12 mx-auto mb-4 opacity-10"></i>
+            No institutional documents found.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

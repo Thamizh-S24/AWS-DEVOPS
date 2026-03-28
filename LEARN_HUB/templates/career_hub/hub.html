@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}AI Career Hub - Learn Hub{% endblock %}
+{% block page_title %}Career Intelligence AI{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-black text-gray-900 italic tracking-tight uppercase">Neural Career Pathways 🧠</h2>
+            <p class="text-gray-400 font-medium italic">Personalized course and job recommendations driven by AI.</p>
+        </div>
+        <div class="flex items-center gap-4">
+             <form method="post" action="{% url 'career_hub:upload_resume' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label class="px-6 py-4 bg-indigo-600 text-white text-xs font-black rounded-3xl hover:bg-indigo-700 transition-all uppercase italic flex items-center gap-2 cursor-pointer shadow-xl shadow-indigo-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="box-arrow-up"></path></svg>
+                    Upload Resume
+                    <input type="file" name="resume" class="hidden" onchange="this.form.submit()">
+                </label>
+             </form>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- AI Course Recommendations -->
+        <div class="lg:col-span-2 space-y-6">
+            <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest italic">Recommended for your skills</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for course in recommended_courses %}
+                <div class="group bg-white rounded-[2rem] border border-gray-100 shadow-xl overflow-hidden hover:scale-[1.02] transition-all">
+                    <div class="h-40 bg-gray-50 border-b border-gray-50 relative">
+                        <img src="https://api.dicebear.com/7.x/abstract/svg?seed={{ course.title }}" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white/90 to-transparent"></div>
+                        <span class="absolute bottom-4 left-4 px-2 py-1 bg-white text-[9px] font-black uppercase text-indigo-600 rounded-lg shadow-sm">AI Suggested</span>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-lg font-black text-gray-900 italic mb-2 line-clamp-1">{{ course.title }}</h4>
+                        <p class="text-xs text-gray-400 italic mb-6 line-clamp-2">{{ course.description }}</p>
+                        <a href="{% url 'learning:course_dashboard' course.id %}" class="block w-full text-center py-4 bg-gray-900 text-white text-[10px] font-black rounded-2xl group-hover:bg-indigo-600 transition-all uppercase italic">Enroll Now</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-400 text-xs italic">No recommendations available at this moment. Complete more quizzes to help the AI learn your patterns.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Job Matches -->
+        <div class="space-y-6">
+            <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest italic">Job Match Confidence</h3>
+            <div class="bg-gray-900 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <svg class="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="briefcase"></path></svg>
+                </div>
+                <div class="space-y-8 relative z-10">
+                    {% for job in mock_jobs %}
+                    <div class="group">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h4 class="text-white text-sm font-black italic">{{ job.title }}</h4>
+                                <p class="text-gray-500 text-[10px] font-medium uppercase tracking-widest">{{ job.company }}</p>
+                            </div>
+                            <span class="text-indigo-400 text-xs font-black italic">{{ job.match }}% Match</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-500 rounded-full group-hover:bg-indigo-400 transition-colors" style="width: {{ job.match }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-12 pt-8 border-t border-gray-800">
+                    <p class="text-[9px] text-gray-500 italic mb-4">Insights based on your resume and quiz performance.</p>
+                    <button class="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] font-black rounded-2xl hover:bg-white hover:text-gray-900 transition-all uppercase italic">View Job Portal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

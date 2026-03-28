@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Discussion Forum - Learn Hub{% endblock %}
+{% block page_title %}Community Forum{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-3xl font-black text-gray-900 tracking-tight">Community Discussions 💬</h2>
+            <p class="text-gray-500 mt-1">Join technical debates, ask questions, and share knowledge with peers.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{% url 'discussions:thread_create' %}" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all transform hover:-translate-y-0.5">
+                + New Discussion
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content: Categories -->
+        <div class="lg:col-span-2 space-y-6">
+            {% for category in categories %}
+            <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden group hover:border-indigo-200 transition-all">
+                <div class="px-6 py-5 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+                            <i data-lucide="{{ category.icon|default:'message-square' }}" class="w-6 h-6 text-indigo-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-black text-gray-900">{{ category.name }}</h3>
+                            <p class="text-xs text-gray-400 font-medium uppercase tracking-widest mt-0.5">{{ category.threads.count }} Threads</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-2 divide-y divide-gray-50">
+                    {% for thread in category.threads.all|slice:":3" %}
+                    <a href="{% url 'discussions:thread_detail' thread.pk %}" class="flex items-start justify-between py-4 group/item">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-gray-800 group-hover/item:text-indigo-600 transition-colors line-clamp-1">{{ thread.title }}</h4>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">{{ thread.creator.username }}</span>
+                                <span class="text-[10px] text-gray-300">•</span>
+                                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">{{ thread.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 ml-4">
+                            <div class="text-right">
+                                <p class="text-xs font-black text-gray-900">{{ thread.posts.count }}</p>
+                                <p class="text-[8px] font-black text-gray-400 uppercase">Replies</p>
+                            </div>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <p class="py-6 text-center text-sm text-gray-400 italic">No discussions yet in this category.</p>
+                    {% endfor %}
+                </div>
+                {% if category.threads.count > 3 %}
+                <div class="px-6 py-3 bg-gray-50/50 border-t border-gray-50">
+                    <a href="#" class="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:underline">View All Category Threads →</a>
+                </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="py-20 text-center bg-white rounded-3xl border-2 border-dashed border-gray-200">
+                <i data-lucide="folders" class="w-12 h-12 text-gray-300 mx-auto mb-4"></i>
+                <p class="text-gray-500 font-bold">No categories created yet.</p>
+                {% if user.is_admin %}
+                <p class="text-sm text-gray-400 mt-1">Go to Django Admin to add forum categories.</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sidebar: Recent Activity & Stats -->
+        <div class="space-y-6">
+            <div class="bg-indigo-900 rounded-3xl p-6 text-white shadow-xl shadow-indigo-100">
+                <h3 class="text-lg font-black italic mb-4">Forum Stats 📊</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-white/10 rounded-2xl">
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-200">Total Threads</span>
+                        <span class="text-lg font-black">{{ recent_threads.count }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-white/10 rounded-2xl">
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-200">Active Members</span>
+                        <span class="text-lg font-black">Online Now</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Global Threads -->
+            <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 overflow-hidden">
+                <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-4">Recent Activity</h3>
+                <div class="space-y-5">
+                    {% for thread in recent_threads %}
+                    <div class="flex items-start gap-3 group">
+                        <img src="https://ui-avatars.com/api/?name={{ thread.creator.username }}&background=6366f1&color=fff&size=32" class="w-8 h-8 rounded-full border border-gray-100" />
+                        <div>
+                            <a href="{% url 'discussions:thread_detail' thread.pk %}" class="text-xs font-bold text-gray-800 group-hover:text-indigo-600 transition-colors line-clamp-1 italic underline-offset-4">{{ thread.title }}</a>
+                            <p class="text-[9px] text-gray-400 mt-1 font-bold uppercase tracking-tighter">{{ thread.creator.username }} in {{ thread.category.name }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-xs text-gray-400 italic">No recent activity.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
