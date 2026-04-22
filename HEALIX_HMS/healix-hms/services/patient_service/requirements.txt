@@ -1,9 +1,0 @@
-fastapi
-uvicorn
-motor
-python-dotenv
-pydantic
-pydantic-settings
-email-validator
-httpx
-httpx
