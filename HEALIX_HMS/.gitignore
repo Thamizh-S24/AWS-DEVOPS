@@ -1,37 +1,99 @@
-# Dependencies
-node_modules/
-venv/
-#env/
-#.env
-
-
-# Build outputs
-build/
-dist/
-out/
-.next/
-
-# Python caches
+# ==============================
+# Python
+# ==============================
 __pycache__/
 *.py[cod]
-*$py.class
-.pytest_cache/
-.tox/
-.nox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-*.cover
 *.pyo
 *.pyd
+*.so
 
-# IDEs
-.idea/
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Python build
+build/
+dist/
+*.egg-info/
+
+# ==============================
+# Environment variables (VERY IMPORTANT)
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Logs
+# ==============================
+*.log
+logs/
+
+# ==============================
+# Node / React
+# ==============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+build/
+
+# ==============================
+# Docker
+# ==============================
+*.pid
+*.seed
+*.db
+*.sqlite3
+
+# ==============================
+# OS files
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# IDE / Editor
+# ==============================
 .vscode/
+.idea/
 *.swp
 *.swo
 
-# OS junk
-.DS_Store
-Thumbs.db
+# ==============================
+# Git
+# ==============================
+.git/
+.gitignore
+
+# ==============================
+# Archives / Large Files (CRITICAL)
+# ==============================
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# ==============================
+# Secrets / Keys
+# ==============================
+*.pem
+*.key
+*.crt
+
+# ==============================
+# Test / Coverage
+# ==============================
+.coverage
+htmlcov/
+.tox/
+
+# ==============================
+# Misc
+# ==============================
+*.bak
+*.tmp
+*.cache

@@ -1,0 +1,177 @@
+services:
+  # Database
+  mongo:
+    image: mongo:latest
+    container_name: hms_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - hms_network
+
+  # API Gateway
+  api_gateway:
+    build: ./api_gateway
+    container_name: hms_gateway
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - auth_service
+    networks:
+      - hms_network
+
+  # Microservices
+  auth_service:
+    build: ./services/auth_service
+    container_name: hms_auth
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  patient_service:
+    build: ./services/patient_service
+    container_name: hms_patient
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  doctor_service:
+    build: ./services/doctor_service
+    container_name: hms_doctor
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  appointment_service:
+    build: ./services/appointment_service
+    container_name: hms_appointment
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  billing_service:
+    build: ./services/billing_service
+    container_name: hms_billing
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  pharmacy_service:
+    build: ./services/pharmacy_service
+    container_name: hms_pharmacy
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  lab_service:
+    build: ./services/lab_service
+    container_name: hms_lab
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  ward_service:
+    build: ./services/ward_service
+    container_name: hms_ward
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  emergency_service:
+    build: ./services/emergency_service
+    container_name: hms_emergency
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  ambulance_service:
+    build: ./services/ambulance_service
+    container_name: hms_ambulance
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  hr_service:
+    build: ./services/hr_service
+    container_name: hms_hr
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  maintenance_service:
+    build: ./services/maintenance_service
+    container_name: hms_maintenance
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  radiology_service:
+    build: ./services/radiology_service
+    container_name: hms_radiology
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  notification_service:
+    build: ./services/notification_service
+    container_name: hms_notification
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  analytics_service:
+    build: ./services/analytics_service
+    container_name: hms_analytics
+    env_file: .env
+    depends_on:
+      - mongo
+    networks:
+      - hms_network
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: hms_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api_gateway
+    networks:
+      - hms_network
+
+networks:
+  hms_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
