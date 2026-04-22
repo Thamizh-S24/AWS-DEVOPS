@@ -1,39 +1,43 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_FILE = 'docker-compose.yml'
-    }
-
     stages {
 
         stage('Checkout Code') {
             steps {
-                echo 'Using existing local code...'
+                checkout scm
             }
         }
 
         stage('Stop Existing Containers') {
             steps {
-                sh 'docker-compose down || true'
+                dir('HEALIX_HMS') {
+                    sh 'docker-compose down || true'
+                }
             }
         }
 
         stage('Build Services') {
             steps {
-                sh 'docker-compose build --no-cache'
+                dir('HEALIX_HMS') {
+                    sh 'docker-compose build --no-cache'
+                }
             }
         }
 
         stage('Start Services') {
             steps {
-                sh 'docker-compose up -d'
+                dir('HEALIX_HMS') {
+                    sh 'docker-compose up -d'
+                }
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                sh 'docker-compose ps'
+                dir('HEALIX_HMS') {
+                    sh 'docker-compose ps'
+                }
             }
         }
     }
