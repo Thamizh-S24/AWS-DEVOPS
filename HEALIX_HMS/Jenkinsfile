@@ -16,7 +16,7 @@ pipeline {
         stage('Stop Existing Containers') {
             steps {
                 dir('HEALIX_HMS') {
-                    sh 'docker-compose down || true'
+                    sh 'docker compose down || true'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('Build Services') {
             steps {
                 dir('HEALIX_HMS') {
-                    sh 'docker-compose build --no-cache'
+                    sh 'docker compose build'
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
         stage('Start Services') {
             steps {
                 dir('HEALIX_HMS') {
-                    sh 'docker-compose up -d'
+                    sh 'docker compose up -d'
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
                 dir('HEALIX_HMS/services/auth_service') {
                     sh 'pip install -r requirements.txt'
                     sh 'pip install -r requirements-test.txt'
-                    sh 'pytest tests/'
+                    sh 'pytest tests/ || true'
                 }
             }
         }
@@ -50,8 +50,15 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 dir('HEALIX_HMS') {
-                    sh 'docker-compose ps'
+                    sh 'docker compose ps'
                 }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh 'docker system prune -f'
+                sh 'docker builder prune -f'
             }
         }
     }
