@@ -39,10 +39,13 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                dir('HEALIX_HMS/services/auth_service') {
-                    sh 'pip install -r requirements.txt'
-                    sh 'pip install -r requirements-test.txt'
-                    sh 'pytest tests/ || true'
+                dir('HEALIX_HMS') {
+                    sh '''
+                    sleep 10
+                    docker exec hms_auth pip install -r /app/requirements.txt
+                    docker exec hms_auth pip install -r /app/requirements-test.txt
+                    docker exec hms_auth pytest /app/tests || true
+                    '''
                 }
             }
         }
