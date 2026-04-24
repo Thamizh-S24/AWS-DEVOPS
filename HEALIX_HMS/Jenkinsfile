@@ -44,7 +44,7 @@ pipeline {
                     sleep 10
                     docker exec hms_auth pip install -r /app/requirements.txt
                     docker exec hms_auth pip install -r /app/requirements-test.txt
-                    docker exec hms_auth pytest /app/tests || true
+                    docker exec hms_auth python -m pytest /app/tests || true
                     '''
                 }
             }
@@ -60,7 +60,6 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                sh 'docker system prune -f'
                 sh 'docker builder prune -f'
             }
         }
