@@ -12,6 +12,16 @@ pipeline {
                 checkout scm
             }
         }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                dir('HEALIX_HMS') {
+                    withSonarQubeEnv('sonarqube') {
+                        sh 'sonar-scanner'
+                    }
+                }
+            }
+        }
 
         stage('Stop Existing Containers') {
             steps {
@@ -44,7 +54,7 @@ pipeline {
                     echo "Waiting for auth service..."
 
                     for i in {1..20}; do
-                       docker exec hms_auth curl -s http://localhost:8000/docs && break
+                       docker exec hms_auth python -c "import requests; requests.get('http://localhost:8000/docs')"
                        echo "Waiting..."
                        sleep 3
                     done
