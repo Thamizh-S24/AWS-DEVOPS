@@ -41,7 +41,14 @@ pipeline {
             steps {
                 dir('HEALIX_HMS') {
                     sh '''
-                    sleep 10
+                    echo "Waiting for auth service..."
+
+                    for i in {1..20}; do
+                       docker exec hms_auth curl -s http://localhost:8000/docs && break
+                       echo "Waiting..."
+                       sleep 3
+                    done
+
                     docker exec hms_auth pip install -r /app/requirements.txt
                     docker exec hms_auth pip install -r /app/requirements-test.txt
                     docker exec hms_auth python -m pytest /app/tests || true
