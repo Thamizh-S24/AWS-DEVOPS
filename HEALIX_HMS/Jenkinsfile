@@ -96,7 +96,7 @@ pipeline {
                 
                 echo "Copying coverage report to Jenkins workspace..."
 
-                docker cp hms_auth:/app/coverage.xml
+                docker cp hms_auth:/app/coverage.xml .
                 '''
             }
         }
