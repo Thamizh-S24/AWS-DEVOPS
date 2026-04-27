@@ -12,7 +12,7 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('SonarQube Analysis') {
             steps {
                 dir('HEALIX_HMS') {
@@ -28,7 +28,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
+                timeout(time: 3, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -58,23 +58,46 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Wait for Services') {
             steps {
-                dir('HEALIX_HMS') {
-                    sh '''
-                    echo "Waiting for auth service..."
+                sh '''
+                echo "Waiting for auth service..."
 
-                    for i in {1..20}; do
-                       docker exec hms_auth python -c "import requests; requests.get('http://localhost:8000/docs')"
-                       echo "Waiting..."
-                       sleep 3
-                    done
+                for i in {1..20}; do
+                  if docker exec hms_auth python -c "import requests; requests.get('http://localhost:8000/docs')" >/dev/null 2>&1; then
+                    echo "Service is UP ✅"
+                    exit 0
+                  fi
+                  echo "Waiting..."
+                  sleep 3
+                done
 
-                    docker exec hms_auth pip install -r /app/requirements.txt
-                    docker exec hms_auth pip install -r /app/requirements-test.txt
-                    docker exec hms_auth python -m pytest /app/tests || true
-                    '''
-                }
+                echo "Service failed to start ❌"
+                exit 1
+                '''
+            }
+        }
+
+        stage('Run Integration Tests') {
+            steps {
+                sh '''
+                echo "Installing test dependencies..."
+
+                docker exec hms_auth pip install -r /app/requirements.txt
+                docker exec hms_auth pip install -r /app/requirements-test.txt
+
+                echo "Running tests with coverage..."
+
+                docker exec hms_auth pytest /app/tests \
+                    --maxfail=1 \
+                    --disable-warnings \
+                    --cov=/app \
+                    --cov-report=xml
+                
+                echo "Copying coverage report to Jenkins workspace..."
+
+                docker cp hms_auth:/app/coverage.xml
+                '''
             }
         }
 
