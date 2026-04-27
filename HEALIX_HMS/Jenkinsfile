@@ -88,7 +88,7 @@ pipeline {
 
                 echo "Running tests with coverage..."
 
-                docker exec hms_auth pytest /app/tests \
+                docker exec hms_auth python -m pytest /app/tests \
                     --maxfail=1 \
                     --disable-warnings \
                     --cov=/app \
