@@ -124,7 +124,7 @@ pipeline {
                 sh '''
                 docker run --rm \
                   --network=host \
-                  -v $(pwd)/HEALIX_HMS/services/auth_service/tests/performance:/scripts \
+                  -v $(pwd)/services/auth_service/tests/performance:/scripts \
                   grafana/k6 run /scripts/load_test.js
                 '''
             }
