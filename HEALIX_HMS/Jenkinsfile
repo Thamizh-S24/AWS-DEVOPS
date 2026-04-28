@@ -57,15 +57,24 @@ pipeline {
             }
         }
 
+        // ✅ INSTALL ONCE
+        stage('Install Test Dependencies') {
+            steps {
+                sh '''
+                echo "Installing test dependencies..."
+
+                docker exec hms_auth pip install -r /app/requirements.txt
+                docker exec hms_auth pip install -r /app/requirements-test.txt
+                '''
+            }
+        }
+
         // 🔥 UNIT TESTS
         stage('Unit Tests') {
             steps {
                 sh '''
-                echo "Running unit tests..."
-
                 docker exec hms_auth python -m pytest /app/tests/unit \
-                    --maxfail=1 \
-                    --disable-warnings
+                    --maxfail=1 --disable-warnings
                 '''
             }
         }
@@ -74,8 +83,6 @@ pipeline {
         stage('Smoke Tests') {
             steps {
                 sh '''
-                echo "Running smoke tests..."
-
                 docker exec hms_auth python -m pytest /app/tests/smoke
                 '''
             }
@@ -85,11 +92,8 @@ pipeline {
         stage('Integration Tests') {
             steps {
                 sh '''
-                echo "Running integration tests..."
-
                 docker exec hms_auth python -m pytest /app/tests/integration \
-                    --maxfail=1 \
-                    --disable-warnings
+                    --maxfail=1 --disable-warnings
                 '''
             }
         }
@@ -98,8 +102,6 @@ pipeline {
         stage('Regression Tests') {
             steps {
                 sh '''
-                echo "Running regression tests..."
-
                 docker exec hms_auth python -m pytest /app/tests/regression
                 '''
             }
@@ -109,8 +111,6 @@ pipeline {
         stage('Performance Tests') {
             steps {
                 sh '''
-                echo "Running performance tests..."
-
                 docker run --rm \
                   --network=host \
                   -v $(pwd)/HEALIX_HMS/services/auth_service/tests/performance:/scripts \
@@ -119,12 +119,10 @@ pipeline {
             }
         }
 
-        // 🔥 COVERAGE + FINAL TEST PASS
+        // 🔥 COVERAGE (MUST BE BEFORE SONAR)
         stage('Generate Coverage') {
             steps {
                 sh '''
-                echo "Generating coverage report..."
-
                 docker exec hms_auth python -m pytest /app/tests \
                     --cov=/app \
                     --cov-report=xml
@@ -134,7 +132,7 @@ pipeline {
             }
         }
 
-        // 🔥 SONAR AFTER TESTS (IMPORTANT)
+        // 🔥 SONAR AFTER COVERAGE
         stage('SonarQube Analysis') {
             steps {
                 dir('HEALIX_HMS') {
