@@ -143,5 +143,9 @@ async def rotate_password(data: dict):
         return {"msg": "Credential security updated"}
     raise HTTPException(status_code=404, detail="User not found")
 
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)
