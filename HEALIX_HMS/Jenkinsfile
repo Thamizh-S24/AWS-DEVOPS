@@ -124,9 +124,13 @@ pipeline {
         stage('Performance Tests') {
             steps {
                 sh '''
+                echo "Checking performance test files ..."
+
+                ls $(pwd)/HEALIX_HMS/services/auth_service/tests/performance
+
                 docker run --rm \
                   --network=host \
-                  -v $(pwd)/services/auth_service/tests/performance:/scripts \
+                  -v $(pwd)/HEALIX_HMS/services/auth_service/tests/performance:/scripts \
                   grafana/k6 run /scripts/load_test.js
                 '''
             }
