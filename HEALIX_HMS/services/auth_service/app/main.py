@@ -4,12 +4,24 @@ from pydantic import BaseModel
 app = FastAPI()
 
 
+# Health check (VERY IMPORTANT for pipeline)
+@app.get("/")
+def root():
+    return {"status": "ok"}
+
+
+@app.get("/docs-check")
+def docs_check():
+    return {"message": "service running"}
+
+
+# ---------------- LOGIN ----------------
+
 class LoginRequest(BaseModel):
     email: str
     password: str
 
 
-# Dummy user (for now)
 FAKE_USER = {
     "email": "test@test.com",
     "password": "123456"
