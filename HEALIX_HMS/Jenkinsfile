@@ -40,9 +40,9 @@ pipeline {
         stage('Wait for Services') {
             steps {
                 sh '''
-                echo "Waiting for auth service to be ready..."
+                echo "Waiting for service to be ready..."
 
-                for i in {1..20}; do
+                for i in ${1..20}; do
                   if docker exec hms_auth python -c "import requests; requests.get('http://localhost:8000/docs')" >/dev/null 2>&1; then
                     echo "Service is UP ✅"
                     exit 0
