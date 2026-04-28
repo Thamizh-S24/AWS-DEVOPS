@@ -13,27 +13,6 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                dir('HEALIX_HMS') {
-                    withSonarQubeEnv('sonarqube') {
-                        script {
-                            def scannerHome = tool 'sonar-scanner'
-                            sh "${scannerHome}/bin/sonar-scanner"
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('Stop Existing Containers') {
             steps {
                 dir('HEALIX_HMS') {
@@ -78,26 +57,102 @@ pipeline {
             }
         }
 
-        stage('Run Integration Tests') {
+        // 🔥 UNIT TESTS
+        stage('Unit Tests') {
             steps {
                 sh '''
-                echo "Installing test dependencies..."
+                echo "Running unit tests..."
 
-                docker exec hms_auth pip install -r /app/requirements.txt
-                docker exec hms_auth pip install -r /app/requirements-test.txt
+                docker exec hms_auth python -m pytest /app/tests/unit \
+                    --maxfail=1 \
+                    --disable-warnings
+                '''
+            }
+        }
 
-                echo "Running tests with coverage..."
+        // 🔥 SMOKE TESTS
+        stage('Smoke Tests') {
+            steps {
+                sh '''
+                echo "Running smoke tests..."
+
+                docker exec hms_auth python -m pytest /app/tests/smoke
+                '''
+            }
+        }
+
+        // 🔥 INTEGRATION TESTS
+        stage('Integration Tests') {
+            steps {
+                sh '''
+                echo "Running integration tests..."
+
+                docker exec hms_auth python -m pytest /app/tests/integration \
+                    --maxfail=1 \
+                    --disable-warnings
+                '''
+            }
+        }
+
+        // 🔥 REGRESSION TESTS
+        stage('Regression Tests') {
+            steps {
+                sh '''
+                echo "Running regression tests..."
+
+                docker exec hms_auth python -m pytest /app/tests/regression
+                '''
+            }
+        }
+
+        // 🔥 PERFORMANCE TEST (k6 via Docker)
+        stage('Performance Tests') {
+            steps {
+                sh '''
+                echo "Running performance tests..."
+
+                docker run --rm \
+                  --network=host \
+                  -v $(pwd)/HEALIX_HMS/services/auth_service/tests/performance:/scripts \
+                  grafana/k6 run /scripts/load_test.js
+                '''
+            }
+        }
+
+        // 🔥 COVERAGE + FINAL TEST PASS
+        stage('Generate Coverage') {
+            steps {
+                sh '''
+                echo "Generating coverage report..."
 
                 docker exec hms_auth python -m pytest /app/tests \
-                    --maxfail=1 \
-                    --disable-warnings \
                     --cov=/app \
                     --cov-report=xml
-                
-                echo "Copying coverage report to Jenkins workspace..."
 
                 docker cp hms_auth:/app/coverage.xml .
                 '''
+            }
+        }
+
+        // 🔥 SONAR AFTER TESTS (IMPORTANT)
+        stage('SonarQube Analysis') {
+            steps {
+                dir('HEALIX_HMS') {
+                    withSonarQubeEnv('sonarqube') {
+                        script {
+                            def scannerHome = tool 'sonar-scanner'
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
 
@@ -118,10 +173,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment successful!'
+            echo '✅ Deployment successful!'
         }
         failure {
-            echo 'Deployment failed!'
+            echo '❌ Deployment failed!'
         }
     }
 }
