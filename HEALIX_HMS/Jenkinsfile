@@ -143,10 +143,12 @@ pipeline {
             steps {
                 sh '''
                 docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests \
-                    --cov=/app \
+                    --cov=/app/services \
                     --cov-report=xml
 
-                docker cp hms_auth:/app/coverage.xml .
+                docker cp hms_auth:/app/coverage.xml HEALIX_HMS/coverage.xml
+
+                sh 'ls -l HEALIX_HMS/coverage.xml'
                 '''
             }
         }
