@@ -95,6 +95,20 @@ pipeline {
             }
         }
 
+        // 🔥 SETUP ADMIN
+        stage('Setup Admin User') {
+            steps {
+                sh '''
+                echo "Creating admin user..."
+ 
+                docker exec -e PYTHONPATH=/app hms_auth python /app/create_admin.py || true
+
+                echo "admin created successfully"
+                '''
+            }
+        }
+
+
         // 🔥 REGRESSION TESTS
         stage('Regression Tests') {
             steps {
