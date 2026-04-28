@@ -124,15 +124,13 @@ pipeline {
         stage('Performance Tests') {
             steps {
                 sh '''
-                echo "Checking performance test files ..."
+                echo "Running performance tests (no mount) ..."
 
                 ls $(pwd)/HEALIX_HMS/services/auth_service/tests/performance
 
-                docker run --rm \
+                cat HEALIX_HMS/services/auth_service/tests/performance/load_test.js | docker run --rm -i \
                   --network=host \
-                  -v $(pwd)/HEALIX_HMS/services/auth_service/tests/performance:/scripts:ro \
-                  --entrypoint "" \
-                  grafana/k6 sh -c "ls /scripts && k6 run /scripts/load_test.js"
+                  grafana/k6 run -
                 '''
             }
         }
