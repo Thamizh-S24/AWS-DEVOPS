@@ -145,8 +145,8 @@ pipeline {
                 docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests \
                     --cov=app \
                     --cov-report=xml:/app/coverage.xml
+                    --cov-config-/app/.coveragerc
 
-                docker exec hms_auth ls /app/coverage.xml
                 docker cp hms_auth:/app/coverage.xml HEALIX_HMS/coverage.xml
 
                 ls -l HEALIX_HMS/coverage.xml
