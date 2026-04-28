@@ -40,6 +40,8 @@ pipeline {
         stage('Wait for Services') {
             steps {
                 sh '''
+                #!/bin/bash
+
                 echo "Waiting for service to be ready..."
 
                 for i in ${seq 1 20}; do
