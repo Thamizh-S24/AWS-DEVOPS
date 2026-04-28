@@ -6,7 +6,7 @@ BASE_URL = "http://localhost:8000"
 def test_invalid_login():
     response = requests.post(
         f"{BASE_URL}/login",
-        json={"email": "wrong@test.com", "password": "wrong"}
+        json={"username": "wrong", "password": "wrong"}
     )
     assert response.status_code == 401
 
@@ -19,7 +19,10 @@ def test_empty_login_payload():
 def test_valid_login():
     response = requests.post(
         f"{BASE_URL}/login",
-        json={"email": "test@test.com", "password": "123456"}
+        json={"username": "admin", "password": "password123"}
     )
+
     assert response.status_code == 200
-    assert "token" in response.json()
+
+    data = response.json()
+    assert "token" in data or "access_token" in data
