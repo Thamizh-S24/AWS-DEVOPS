@@ -43,7 +43,11 @@ pipeline {
                 echo "Waiting for service to be ready..."
 
                 for i in ${seq 1 20}; do
-                  if docker exec hms_auth python -c "import requests; requests.get('http://localhost:8000/docs')" >/dev/null 2>&1; then
+                  if docker exec hms_auth python -c "
+         import requests
+         r = requests.get('http://localhost:8000/docs')
+         exit(0 if r.status_code == 200 else 1)
+         " >/dev/null 2>&1; then
                     echo "Service is UP ✅"
                     exit 0
                   fi
