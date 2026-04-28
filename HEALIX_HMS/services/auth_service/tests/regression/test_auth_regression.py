@@ -25,4 +25,4 @@ def test_valid_login():
     assert response.status_code == 200
 
     data = response.json()
-    assert "access" in data   # <-- important change
+    assert "access" in data
