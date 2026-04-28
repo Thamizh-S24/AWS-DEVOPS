@@ -57,12 +57,9 @@ pipeline {
             }
         }
 
-        // ✅ INSTALL ONCE
         stage('Install Test Dependencies') {
             steps {
                 sh '''
-                echo "Installing test dependencies..."
-
                 docker exec hms_auth pip install -r /app/requirements.txt
                 docker exec hms_auth pip install -r /app/requirements-test.txt
                 '''
@@ -73,7 +70,7 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 sh '''
-                docker exec hms_auth python -m pytest /app/tests/unit \
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/unit \
                     --maxfail=1 --disable-warnings
                 '''
             }
@@ -83,7 +80,7 @@ pipeline {
         stage('Smoke Tests') {
             steps {
                 sh '''
-                docker exec hms_auth python -m pytest /app/tests/smoke
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/smoke
                 '''
             }
         }
@@ -92,7 +89,7 @@ pipeline {
         stage('Integration Tests') {
             steps {
                 sh '''
-                docker exec hms_auth python -m pytest /app/tests/integration \
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/integration \
                     --maxfail=1 --disable-warnings
                 '''
             }
@@ -102,7 +99,7 @@ pipeline {
         stage('Regression Tests') {
             steps {
                 sh '''
-                docker exec hms_auth python -m pytest /app/tests/regression
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/regression
                 '''
             }
         }
@@ -119,11 +116,11 @@ pipeline {
             }
         }
 
-        // 🔥 COVERAGE (MUST BE BEFORE SONAR)
+        // 🔥 COVERAGE (IMPORTANT)
         stage('Generate Coverage') {
             steps {
                 sh '''
-                docker exec hms_auth python -m pytest /app/tests \
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests \
                     --cov=/app \
                     --cov-report=xml
 
