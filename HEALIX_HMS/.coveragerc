@@ -4,4 +4,4 @@ source = app
 [paths]
 source =
     /app/app
-    .
+    services/auth_service/app
