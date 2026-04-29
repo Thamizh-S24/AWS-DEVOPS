@@ -142,10 +142,18 @@ pipeline {
         stage('Generate Coverage') {
             steps {
                 sh '''
+
+                echo "Copying coveragerc into container ... "
+                docker cp HEALIX_HMS/.coveragerc hms_auth:/app/.coveragerc
+
+                echo "Running tests with coverage ... "
+
                 docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests \
                     --cov=app \
                     --cov-report=xml:/app/coverage.xml \
                     --cov-config=/app/.coveragerc
+
+                echo "Copying coverage.xml to workspace ..."
 
                 docker cp hms_auth:/app/coverage.xml HEALIX_HMS/coverage.xml
 
