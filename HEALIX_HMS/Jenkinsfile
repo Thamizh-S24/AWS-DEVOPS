@@ -40,7 +40,6 @@ pipeline {
         stage('Wait for Services') {
             steps {
                 sh '''
-                
                 echo "Waiting for service to be ready..."
 
                 for i in $(seq 1 20); do
@@ -54,10 +53,8 @@ pipeline {
                 done
 
                 echo "Service failed to start ❌"
-                echo "====== AUTH SERVICE LOGS ======"
                 docker logs hms_auth
                 exit 1
-                '
                 '''
             }
         }
@@ -65,108 +62,105 @@ pipeline {
         stage('Install Test Dependencies') {
             steps {
                 sh '''
-                docker exec hms_auth pip install -r /app/requirements.txt
-                docker exec hms_auth pip install -r /app/requirements-test.txt
+                docker exec hms_auth python -m pip install -r /app/requirements.txt
+                docker exec hms_auth python -m pip install -r /app/requirements-test.txt
                 '''
             }
         }
 
-        // 🔥 UNIT TESTS
+        // =========================
+        // 🔥 TEST STAGES (MARKER BASED)
+        // =========================
+
         stage('Unit Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/unit \
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m unit \
                     --maxfail=1 --disable-warnings
                 '''
             }
         }
 
-        // 🔥 SMOKE TESTS
         stage('Smoke Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/smoke
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m smoke
                 '''
             }
         }
 
-        // 🔥 INTEGRATION TESTS
         stage('Integration Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/integration \
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m integration \
                     --maxfail=1 --disable-warnings
                 '''
             }
         }
 
-        // 🔥 SETUP ADMIN
         stage('Setup Admin User') {
             steps {
                 sh '''
                 echo "Creating admin user..."
- 
                 docker exec -e PYTHONPATH=/app hms_auth python /app/create_admin.py || true
-
-                echo "admin created successfully"
                 '''
             }
         }
 
-
-        // 🔥 REGRESSION TESTS
         stage('Regression Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests/regression
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m regression
                 '''
             }
         }
 
-        // 🔥 PERFORMANCE TEST (k6 via Docker)
+        // =========================
+        // 🔥 PERFORMANCE TEST
+        // =========================
+
         stage('Performance Tests') {
             steps {
                 sh '''
-                echo "Running performance tests (no mount) ..."
-
-                ls $(pwd)/HEALIX_HMS/services/auth_service/tests/performance
+                echo "Running performance tests..."
 
                 cat HEALIX_HMS/services/auth_service/tests/performance/load_test.js | docker run --rm -i \
-                  --network=host \
-                  grafana/k6 run -
+                  --network=host grafana/k6 run -
                 '''
             }
         }
 
-        // 🔥 COVERAGE (IMPORTANT)
+        // =========================
+        // 🔥 COVERAGE
+        // =========================
+
         stage('Generate Coverage') {
             steps {
                 sh '''
-
-                echo "Copying coveragerc into container ... "
+                echo "Copying coveragerc..."
                 docker cp HEALIX_HMS/.coveragerc hms_auth:/app/.coveragerc
 
-                echo "Running tests with coverage ... "
-
+                echo "Running coverage..."
                 docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services \
                     --cov=services \
                     --cov-report=xml:/app/coverage.xml \
                     --cov-config=/app/.coveragerc
 
-                echo "Copying coverage.xml to workspace ..."
-
+                echo "Copying coverage.xml..."
                 docker cp hms_auth:/app/coverage.xml HEALIX_HMS/coverage.xml
 
-                echo "Fixing paths in coverage.xml ...."
+                echo "Fixing coverage paths..."
                 sed -i 's|/app/services|services|g' HEALIX_HMS/coverage.xml
 
-                echo "Preview fixed coverage file: "
                 head -20 HEALIX_HMS/coverage.xml
                 '''
             }
         }
 
-        // 🔥 SONAR AFTER COVERAGE
+        // =========================
+        // 🔥 SONAR
+        // =========================
+
         stage('SonarQube Analysis') {
             steps {
                 dir('HEALIX_HMS') {
