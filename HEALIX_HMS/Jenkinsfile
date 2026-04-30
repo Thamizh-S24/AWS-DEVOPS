@@ -158,7 +158,7 @@ pipeline {
                 docker cp hms_auth:/app/coverage.xml HEALIX_HMS/coverage.xml
 
                 echo "Fixing paths in coverage.xml ...."
-                sed -i 's|/app/app|services/auth_service/app|g' HEALIX_HMS/coverage.xml
+                sed -i 's|/app/services|services|g' HEALIX_HMS/coverage.xml
 
                 echo "Preview fixed coverage file: "
                 head -20 HEALIX_HMS/coverage.xml
