@@ -1,7 +1,7 @@
 [run]
-source = app
+source = services
 
-[paths]
-source =
-    /app/app
-    services/auth_service/app
+[report]
+omit =
+    */tests/*
+    */__init__.py

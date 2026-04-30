@@ -148,8 +148,8 @@ pipeline {
 
                 echo "Running tests with coverage ... "
 
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/tests \
-                    --cov=app \
+                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services \
+                    --cov=services \
                     --cov-report=xml:/app/coverage.xml \
                     --cov-config=/app/.coveragerc
 
