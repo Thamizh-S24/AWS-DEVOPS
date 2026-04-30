@@ -1,3 +1,5 @@
+import pytest
+@pytest.mark.unit
 def test_password_hash():
     from app.utils import hash_password
 
