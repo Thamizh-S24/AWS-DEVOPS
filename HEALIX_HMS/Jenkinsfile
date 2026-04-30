@@ -38,13 +38,12 @@ pipeline {
         }
 
         // =========================
-        // 🔥 WAIT FOR AUTH SERVICE
+        // WAIT FOR AUTH SERVICE
         // =========================
         stage('Wait for Services') {
             steps {
                 sh '''
                 echo "Waiting for auth service..."
-
                 for i in $(seq 1 20); do
                   if docker exec hms_auth python -c "import requests; exit(0 if requests.get('http://localhost:8000/health').status_code==200 else 1)" >/dev/null 2>&1; then
                     echo "Auth Service UP ✅"
@@ -52,7 +51,6 @@ pipeline {
                   fi
                   sleep 5
                 done
-
                 echo "Auth failed ❌"
                 docker logs hms_auth
                 exit 1
@@ -61,61 +59,93 @@ pipeline {
         }
 
         // =========================
-        // 🔥 INSTALL TEST DEPENDENCIES
+        // INSTALL TEST DEPENDENCIES
         // =========================
         stage('Install Test Dependencies') {
             steps {
                 sh '''
-                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    echo "Checking $svc..."
+
+                    if ! docker exec $svc python --version >/dev/null 2>&1; then
+                        echo "⏭ Skipping $svc (no Python)"
+                        continue
+                    fi
+
+                    if ! docker exec $svc test -f /app/requirements-test.txt >/dev/null 2>&1; then
+                        echo "⏭ Skipping $svc (no requirements-test.txt)"
+                        continue
+                    fi
+
                     echo "Installing test deps in $svc"
-                    docker exec $svc python -m pip install -r /app/requirements-test.txt || true
+                    docker exec $svc python -m pip install -r /app/requirements-test.txt
+
                 done
                 '''
             }
         }
 
         // =========================
-        // 🔥 UNIT TESTS
+        // UNIT TESTS
         // =========================
         stage('Unit Tests') {
             steps {
                 sh '''
-                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if ! docker exec $svc python --version >/dev/null 2>&1; then continue; fi
+                    if ! docker exec $svc test -d /app/tests >/dev/null 2>&1; then continue; fi
+
                     echo "Running UNIT tests in $svc"
                     docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m unit || exit 1
+
                 done
                 '''
             }
         }
 
         // =========================
-        // 🔥 SMOKE TESTS
+        // SMOKE TESTS
         // =========================
         stage('Smoke Tests') {
             steps {
                 sh '''
-                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if ! docker exec $svc python --version >/dev/null 2>&1; then continue; fi
+                    if ! docker exec $svc test -d /app/tests >/dev/null 2>&1; then continue; fi
+
                     echo "Running SMOKE tests in $svc"
                     docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m smoke || exit 1
+
                 done
                 '''
             }
         }
 
         // =========================
-        // 🔥 INTEGRATION TESTS
+        // INTEGRATION TESTS
         // =========================
         stage('Integration Tests') {
             steps {
                 sh '''
-                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if ! docker exec $svc python --version >/dev/null 2>&1; then continue; fi
+                    if ! docker exec $svc test -d /app/tests >/dev/null 2>&1; then continue; fi
+
                     echo "Running INTEGRATION tests in $svc"
                     docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m integration || exit 1
+
                 done
                 '''
             }
         }
 
+        // =========================
+        // ADMIN SETUP
+        // =========================
         stage('Setup Admin User') {
             steps {
                 sh '''
@@ -125,21 +155,26 @@ pipeline {
         }
 
         // =========================
-        // 🔥 REGRESSION TESTS
+        // REGRESSION TESTS
         // =========================
         stage('Regression Tests') {
             steps {
                 sh '''
-                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if ! docker exec $svc python --version >/dev/null 2>&1; then continue; fi
+                    if ! docker exec $svc test -d /app/tests >/dev/null 2>&1; then continue; fi
+
                     echo "Running REGRESSION tests in $svc"
                     docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m regression || exit 1
+
                 done
                 '''
             }
         }
 
         // =========================
-        // 🔥 PERFORMANCE TEST
+        // PERFORMANCE TEST
         // =========================
         stage('Performance Tests') {
             steps {
@@ -151,41 +186,32 @@ pipeline {
         }
 
         // =========================
-        // 🔥 COVERAGE PER SERVICE
+        // COVERAGE
         // =========================
         stage('Generate Coverage') {
             steps {
                 sh '''
                 mkdir -p HEALIX_HMS/coverage
 
-                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if ! docker exec $svc python --version >/dev/null 2>&1; then continue; fi
+                    if ! docker exec $svc test -d /app/tests >/dev/null 2>&1; then continue; fi
+
                     echo "Generating coverage for $svc"
 
                     docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests \
                         --cov=app --cov-report=xml:/app/coverage.xml || true
 
                     docker cp $svc:/app/coverage.xml HEALIX_HMS/coverage/coverage-$svc.xml || true
+
                 done
                 '''
             }
         }
 
         // =========================
-        // 🔥 MERGE COVERAGE
-        // =========================
-        stage('Merge Coverage') {
-            steps {
-                sh '''
-                pip install coverage
-
-                coverage combine HEALIX_HMS/coverage || true
-                coverage xml -o HEALIX_HMS/coverage.xml
-                '''
-            }
-        }
-
-        // =========================
-        // 🔥 SONAR
+        // SONAR
         // =========================
         stage('SonarQube Analysis') {
             steps {
