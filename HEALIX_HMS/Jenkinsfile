@@ -37,73 +37,81 @@ pipeline {
             }
         }
 
+        // =========================
+        // 🔥 WAIT FOR AUTH SERVICE
+        // =========================
         stage('Wait for Services') {
             steps {
                 sh '''
-                echo "Waiting for service to be ready..."
+                echo "Waiting for auth service..."
 
                 for i in $(seq 1 20); do
                   if docker exec hms_auth python -c "import requests; exit(0 if requests.get('http://localhost:8000/health').status_code==200 else 1)" >/dev/null 2>&1; then
-                    echo "Service is UP ✅"
+                    echo "Auth Service UP ✅"
                     exit 0
                   fi
-
-                  echo "Still Waiting...($i)"
-                  sleep 6
+                  sleep 5
                 done
 
-                echo "Service failed to start ❌"
+                echo "Auth failed ❌"
                 docker logs hms_auth
                 exit 1
                 '''
             }
         }
 
+        // =========================
+        // 🔥 INSTALL TEST DEPENDENCIES
+        // =========================
         stage('Install Test Dependencies') {
             steps {
                 sh '''
-                docker exec hms_auth python -m pip install -r /app/requirements.txt
-                docker exec hms_auth python -m pip install -r /app/requirements-test.txt
+                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                    echo "Installing test deps in $svc"
+                    docker exec $svc python -m pip install -r /app/requirements-test.txt || true
+                done
                 '''
             }
         }
 
-        stage('Clean Old Tests') {
-            steps {
-                sh '''
-                echo "Removing old /app/tests folder ..."
-                docker exec hms_auth rm -rf /app/tests || true
-                '''
-            }
-        }
-
-
         // =========================
-        // 🔥 TEST STAGES (MARKER BASED)
+        // 🔥 UNIT TESTS
         // =========================
-
         stage('Unit Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m unit \
-                    --maxfail=1 --disable-warnings
+                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                    echo "Running UNIT tests in $svc"
+                    docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m unit || exit 1
+                done
                 '''
             }
         }
 
+        // =========================
+        // 🔥 SMOKE TESTS
+        // =========================
         stage('Smoke Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m smoke
+                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                    echo "Running SMOKE tests in $svc"
+                    docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m smoke || exit 1
+                done
                 '''
             }
         }
 
+        // =========================
+        // 🔥 INTEGRATION TESTS
+        // =========================
         stage('Integration Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m integration \
-                    --maxfail=1 --disable-warnings
+                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                    echo "Running INTEGRATION tests in $svc"
+                    docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m integration || exit 1
+                done
                 '''
             }
         }
@@ -111,16 +119,21 @@ pipeline {
         stage('Setup Admin User') {
             steps {
                 sh '''
-                echo "Creating admin user..."
                 docker exec -e PYTHONPATH=/app hms_auth python /app/create_admin.py || true
                 '''
             }
         }
 
+        // =========================
+        // 🔥 REGRESSION TESTS
+        // =========================
         stage('Regression Tests') {
             steps {
                 sh '''
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services -m regression
+                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                    echo "Running REGRESSION tests in $svc"
+                    docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m regression || exit 1
+                done
                 '''
             }
         }
@@ -128,41 +141,45 @@ pipeline {
         // =========================
         // 🔥 PERFORMANCE TEST
         // =========================
-
         stage('Performance Tests') {
             steps {
                 sh '''
-                echo "Running performance tests..."
-
-                cat HEALIX_HMS/services/auth_service/tests/performance/load_test.js | docker run --rm -i \
-                  --network=host grafana/k6 run -
+                cat HEALIX_HMS/services/auth_service/tests/performance/load_test.js | \
+                docker run --rm -i --network=host grafana/k6 run -
                 '''
             }
         }
 
         // =========================
-        // 🔥 COVERAGE
+        // 🔥 COVERAGE PER SERVICE
         // =========================
-
         stage('Generate Coverage') {
             steps {
                 sh '''
-                echo "Copying coveragerc..."
-                docker cp HEALIX_HMS/.coveragerc hms_auth:/app/.coveragerc
+                mkdir -p HEALIX_HMS/coverage
 
-                echo "Running coverage..."
-                docker exec -e PYTHONPATH=/app hms_auth python -m pytest /app/services \
-                    --cov=services \
-                    --cov-report=xml:/app/coverage.xml \
-                    --cov-config=/app/.coveragerc
+                for svc in $(docker ps --format '{{.Names}}' | grep hms_); do
+                    echo "Generating coverage for $svc"
 
-                echo "Copying coverage.xml..."
-                docker cp hms_auth:/app/coverage.xml HEALIX_HMS/coverage.xml
+                    docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests \
+                        --cov=app --cov-report=xml:/app/coverage.xml || true
 
-                echo "Fixing coverage paths..."
-                sed -i 's|/app/services|services|g' HEALIX_HMS/coverage.xml
+                    docker cp $svc:/app/coverage.xml HEALIX_HMS/coverage/coverage-$svc.xml || true
+                done
+                '''
+            }
+        }
 
-                head -20 HEALIX_HMS/coverage.xml
+        // =========================
+        // 🔥 MERGE COVERAGE
+        // =========================
+        stage('Merge Coverage') {
+            steps {
+                sh '''
+                pip install coverage
+
+                coverage combine HEALIX_HMS/coverage || true
+                coverage xml -o HEALIX_HMS/coverage.xml
                 '''
             }
         }
@@ -170,7 +187,6 @@ pipeline {
         // =========================
         // 🔥 SONAR
         // =========================
-
         stage('SonarQube Analysis') {
             steps {
                 dir('HEALIX_HMS') {
@@ -188,14 +204,6 @@ pipeline {
             steps {
                 timeout(time: 3, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                dir('HEALIX_HMS') {
-                    sh 'docker-compose ps'
                 }
             }
         }
