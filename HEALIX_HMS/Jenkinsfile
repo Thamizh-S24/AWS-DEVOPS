@@ -68,6 +68,16 @@ pipeline {
             }
         }
 
+        stage('Clean Old Tests') {
+            steps {
+                sh '''
+                echo "Removing old /app/tests folder ..."
+                docker exec hms_auth rm -rf /app/tests || true
+                '''
+            }
+        }
+
+
         // =========================
         // 🔥 TEST STAGES (MARKER BASED)
         // =========================
