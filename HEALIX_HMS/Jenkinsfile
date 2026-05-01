@@ -69,8 +69,12 @@ pipeline {
                 for svc in $(docker ps --format '{{.Names}}'); do
 
                     if docker exec $svc python --version >/dev/null 2>&1; then
-                        echo "Installing test deps in $svc"
-                        docker exec $svc python -m pip install -r /app/requirements-test.txt
+                         if docker exec $svc test -f /app/requirements-test.txt >/dev/null 2>&1; then
+                             echo "Installing test deps in $svc"
+                             docker exec $svc python -m pip install -r /app/requirements-test.txt
+                         else
+                             echo "⚠️ No requirements-test.txt in $svc"
+                         fi
                     fi
 
                 done
