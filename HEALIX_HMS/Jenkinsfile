@@ -1,7 +1,6 @@
 pipeline {
 agent any
 
-```
 environment {
     DOCKER_BUILDKIT = '1'
     GIT_TAG = "${env.GIT_COMMIT ? env.GIT_COMMIT.take(7) : 'latest'}"
@@ -192,6 +191,5 @@ post {
         sh 'docker image prune -f'
     }
 }
-```
 
 }
