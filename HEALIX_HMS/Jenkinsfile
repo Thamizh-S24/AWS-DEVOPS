@@ -19,7 +19,7 @@ stages {
 
     stage('Initialize and Clean') {
         steps {
-            sh 'docker-compose -f compose/docker-compose.base.yml down || true'
+            sh 'docker-compose -f HEALIX_HMS/compose/docker-compose.base.yml down || true'
             sh 'docker image prune -f'
             sh 'rm -rf coverage && mkdir -p coverage'
         }
@@ -39,10 +39,10 @@ stages {
         steps {
             script {
                 echo "Building and tagging microservices..."
-                sh 'docker-compose -f compose/docker-compose.base.yml -f compose/docker-compose.test.yml build'
+                sh 'docker-compose -f HEALIX_HMS/compose/docker-compose.base.yml -f HEALIX_HMS/compose/docker-compose.test.yml build'
 
                 def services = sh(
-                    script: "docker-compose -f compose/docker-compose.base.yml config --services",
+                    script: "docker-compose -f HEALIX_HMS/compose/docker-compose.base.yml config --services",
                     returnStdout: true
                 ).trim().split('\n')
 
@@ -61,7 +61,7 @@ stages {
     stage('Check Health') {
         steps {
             script {
-                sh 'docker-compose -f compose/docker-compose.base.yml -f compose/docker-compose.test.yml up -d'
+                sh 'docker-compose -f HEALIX_HMS/compose/docker-compose.base.yml -f HEALIX_HMS/compose/docker-compose.test.yml up -d'
 
                 sh '''
                 set -e
@@ -187,7 +187,7 @@ stages {
 
 post {
     always {
-        sh 'docker-compose -f compose/docker-compose.base.yml down || true'
+        sh 'docker-compose -f HEALIX_HMS/compose/docker-compose.base.yml down || true'
         sh 'docker image prune -f'
     }
 }
