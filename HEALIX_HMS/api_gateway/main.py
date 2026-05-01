@@ -161,6 +161,10 @@ async def gateway(request: Request, service: str, path: str, user: dict = Depend
             print(f"GATEWAY PROXY ERROR: {str(e)}")
             raise HTTPException(status_code=502, detail=f"Service error: {str(e)}")
 
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

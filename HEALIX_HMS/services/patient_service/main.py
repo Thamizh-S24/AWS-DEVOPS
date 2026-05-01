@@ -218,6 +218,11 @@ async def get_ward_status_proxy(patient_id: str):
         return {"status": "error", "msg": str(e)}
     return {"status": "Not Admitted"}
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8002)
+

@@ -46,6 +46,11 @@ async def assign_driver(id: str, driver_name: str):
     await db.ambulances.update_one({"_id": ObjectId(id)}, {"$set": {"driver_name": driver_name, "status": "Busy"}})
     return {"status": "assigned"}
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8010)
+

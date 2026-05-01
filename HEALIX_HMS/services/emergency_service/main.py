@@ -69,6 +69,11 @@ async def get_ambulances():
     for a in ambulances: a["_id"] = str(a["_id"])
     return ambulances
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8009)
+

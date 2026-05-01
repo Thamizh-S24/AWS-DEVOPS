@@ -171,6 +171,11 @@ async def get_doctor_dept(doctor_id: str):
         return {"department_id": link["department_id"]}
     return {"department_id": None}
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8011)
+

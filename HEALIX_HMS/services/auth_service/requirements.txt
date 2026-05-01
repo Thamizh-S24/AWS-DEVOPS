@@ -7,4 +7,3 @@ pydantic-settings
 email-validator
 python-jose[cryptography]
 bcrypt
-requests

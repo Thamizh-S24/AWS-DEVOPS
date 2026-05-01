@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mongo:
+    ports:
+      - "27017:27017"
+
+  api_gateway:
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../api_gateway:/app
+    environment:
+      - ENVIRONMENT=development
+
+  auth_service:
+    volumes:
+      - ../services/auth_service:/app
+    environment:
+      - ENVIRONMENT=development
+
+  frontend:
+    ports:
+      - "3000:80"
+    volumes:
+      - ../frontend/src:/app/src

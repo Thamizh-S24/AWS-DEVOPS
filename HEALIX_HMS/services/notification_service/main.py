@@ -193,6 +193,11 @@ async def send_email_fallback(msg: str, user_id: str, subject: str):
     except Exception as e:
         print(f"Email failed: {e}")
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8014)
+

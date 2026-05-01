@@ -44,6 +44,11 @@ async def get_all_appointments():
     for item in res: item["_id"] = str(item["_id"])
     return res
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8004)
+

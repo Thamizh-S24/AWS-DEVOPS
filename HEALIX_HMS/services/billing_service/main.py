@@ -84,6 +84,11 @@ async def auto_aggregate_invoice(patient_id: str):
     result = await db.invoices.insert_one(invoice.dict())
     return {"id": str(result.inserted_id), "status": "invoice_aggregated", "total": total}
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8005)
+

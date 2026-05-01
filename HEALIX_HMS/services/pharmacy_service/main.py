@@ -85,6 +85,11 @@ async def get_patient_transactions(patient_id: str):
         t["medicine_name"] = item.get("name", "Unknown") if item else "Unknown"
     return txs
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8006)
+

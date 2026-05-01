@@ -42,6 +42,11 @@ async def update_task_status(id: str, status: str):
     await db.tasks.update_one({"_id": ObjectId(id)}, {"$set": {"status": status}})
     return {"status": "updated"}
 
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8012)
+
