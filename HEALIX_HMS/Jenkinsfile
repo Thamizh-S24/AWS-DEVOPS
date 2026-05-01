@@ -61,58 +61,97 @@ pipeline {
         }
 
         // =========================
-        // 🔥 SELF-HEALING TEST RUNNER
+        // INSTALL TEST DEPENDENCIES
         // =========================
-        stage('Run All Tests') {
+        stage('Install Test Dependencies') {
             steps {
-                script {
+                sh '''
+                for svc in $(docker ps --format '{{.Names}}'); do
 
-                    def containers = sh(
-                        script: "docker ps --format '{{.Names}}'",
-                        returnStdout: true
-                    ).trim().split("\n")
+                    if docker exec $svc python --version >/dev/null 2>&1; then
+                        echo "Installing test deps in $svc"
+                        docker exec $svc python -m pip install -r /app/requirements-test.txt
+                    fi
 
-                    for (c in containers) {
-
-                        echo "🔍 Processing ${c}"
-
-                        sh """
-                        docker exec ${c} sh -c '
-
-                            # 1️⃣ Check python exists
-                            if ! command -v python >/dev/null 2>&1; then
-                                echo "⏭ Skipping ${c} (no Python)"
-                                exit 0
-                            fi
-
-                            # 2️⃣ Install test dependencies if available
-                            if [ -f /app/requirements-test.txt ]; then
-                                echo "Installing test deps in ${c}"
-                                python -m pip install -r /app/requirements-test.txt >/dev/null 2>&1
-                            fi
-
-                            # 3️⃣ Ensure tests folder exists
-                            mkdir -p /app/tests
-
-                            # 4️⃣ Auto-create basic test if none exists
-                            if [ ! -f /app/tests/test_basic.py ]; then
-                                echo "def test_auto(): assert True" > /app/tests/test_basic.py
-                            fi
-
-                            # 5️⃣ Run tests (no failure break)
-                            echo "Running tests in ${c}"
-
-                            python -m pytest /app/tests || echo "⚠️ Tests failed in ${c}, continuing..."
-
-                        '
-                        """
-                    }
-                }
+                done
+                '''
             }
         }
 
         // =========================
-        // 🔥 COVERAGE (SELF-HEALING)
+        // UNIT TESTS
+        // =========================
+        stage('Unit Tests') {
+            steps {
+                sh '''
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if docker exec $svc python --version >/dev/null 2>&1; then
+                        echo "Running UNIT tests in $svc"
+                        docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m unit --maxfail=1 --disable-warnings
+                    fi
+
+                done
+                '''
+            }
+        }
+
+        // =========================
+        // SMOKE TESTS
+        // =========================
+        stage('Smoke Tests') {
+            steps {
+                sh '''
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if docker exec $svc python --version >/dev/null 2>&1; then
+                        echo "Running SMOKE tests in $svc"
+                        docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m smoke
+                    fi
+
+                done
+                '''
+            }
+        }
+
+        // =========================
+        // INTEGRATION TESTS
+        // =========================
+        stage('Integration Tests') {
+            steps {
+                sh '''
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if docker exec $svc python --version >/dev/null 2>&1; then
+                        echo "Running INTEGRATION tests in $svc"
+                        docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m integration
+                    fi
+
+                done
+                '''
+            }
+        }
+
+        // =========================
+        // REGRESSION TESTS
+        // =========================
+        stage('Regression Tests') {
+            steps {
+                sh '''
+                for svc in $(docker ps --format '{{.Names}}'); do
+
+                    if docker exec $svc python --version >/dev/null 2>&1; then
+                        echo "Running REGRESSION tests in $svc"
+                        docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests -m regression
+                    fi
+
+                done
+                '''
+            }
+        }
+
+        // =========================
+        // COVERAGE
         // =========================
         stage('Generate Coverage') {
             steps {
@@ -122,16 +161,13 @@ pipeline {
                 for svc in $(docker ps --format '{{.Names}}'); do
 
                     if docker exec $svc python --version >/dev/null 2>&1; then
-
                         echo "Generating coverage for $svc"
 
-                        docker exec $svc sh -c '
-                            mkdir -p /app/tests
-                            python -m pip install pytest pytest-cov >/dev/null 2>&1
-                            pytest /app/tests --cov=. --cov-report=xml:/app/coverage.xml || true
-                        '
+                        docker exec -e PYTHONPATH=/app $svc python -m pytest /app/tests \
+                            --cov=. \
+                            --cov-report=xml:/app/coverage.xml
 
-                        docker cp $svc:/app/coverage.xml HEALIX_HMS/coverage/coverage-$svc.xml || true
+                        docker cp $svc:/app/coverage.xml HEALIX_HMS/coverage/coverage-$svc.xml
                     fi
 
                 done
@@ -140,7 +176,7 @@ pipeline {
         }
 
         // =========================
-        // 🔥 SONAR
+        // SONAR
         // =========================
         stage('SonarQube Analysis') {
             steps {
@@ -158,7 +194,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }

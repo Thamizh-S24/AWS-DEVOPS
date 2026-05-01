@@ -2,33 +2,18 @@ import pytest
 from fastapi.testclient import TestClient
 import sys
 import os
-import importlib
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if BASE_DIR not in sys.path:
-    sys.path.append(BASE_DIR)
+sys.path.append(BASE_DIR)
 
-app = None
-
-POSSIBLE_PATHS = [
-    "app.main",
-    "main",
-    "src.main",
-]
-
-for path in POSSIBLE_PATHS:
-    try:
-        module = importlib.import_module(path)
-        app = getattr(module, "app", None)
-        if app:
-            print(f"Loaded app from {path}")
-            break
-    except Exception:
-        continue
+try:
+    from main import app
+except Exception:
+    app = None
 
 
 @pytest.fixture(scope="module")
 def client():
     if app:
         return TestClient(app)
-    pytest.skip("No FastAPI app found in this service")
+    pytest.skip("No app found in this service")
