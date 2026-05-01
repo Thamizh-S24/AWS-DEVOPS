@@ -1,187 +1,197 @@
 pipeline {
-    agent any
+agent any
 
-    environment {
-        // Build variables
-        DOCKER_BUILDKIT = '1'
-        GIT_TAG = "${env.GIT_COMMIT ? env.GIT_COMMIT.take(7) : 'latest'}"
-        BUILD_TAG = "${env.BUILD_NUMBER}"
-        REGISTRY = "hms-registry.local" // Placeholder for actual registry
-        
-        // Environment selection (could be a parameter)
-        DEPLOY_ENV = 'test'
-    }
+```
+environment {
+    DOCKER_BUILDKIT = '1'
+    GIT_TAG = "${env.GIT_COMMIT ? env.GIT_COMMIT.take(7) : 'latest'}"
+    BUILD_TAG = "${env.BUILD_NUMBER}"
+    REGISTRY = "hms-registry.local"
+    DEPLOY_ENV = 'test'
+}
 
-    stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout scm
-            }
-        }
+stages {
 
-        stage('Initialize and Clean') {
-            steps {
-                sh 'docker-compose -f compose/docker-compose.base.yml down || true'
-                sh 'docker image prune -f'
-                sh 'rm -rf coverage && mkdir -p coverage'
-            }
-        }
-
-        stage('Static Analysis (Lint)') {
-            steps {
-                script {
-                    echo "Running containerized linting..."
-                    // Build a temporary lint image or use one of the existing ones
-                    sh 'docker build -t hms-lint -f docker/base.Dockerfile .'
-                    sh 'docker run --rm -v ${WORKSPACE}:/app -w /app hms-lint flake8 . --exclude=venv,node_modules --ignore=E501'
-                }
-            }
-        }
-
-        stage('Build and Tag Images') {
-            steps {
-                script {
-                    echo "Building and tagging microservices..."
-                    sh 'docker-compose -f compose/docker-compose.base.yml -f compose/docker-compose.test.yml build'
-                    
-                    def services = sh(script: "docker-compose -f compose/docker-compose.base.yml config --services", returnStdout: true).trim().split('\n')
-                    for (svc in services) {
-                        if (svc) {
-                            def imgName = "hms_${svc}"
-                            sh "docker tag ${imgName}:latest ${REGISTRY}/${imgName}:${GIT_TAG}"
-                            sh "docker tag ${imgName}:latest ${REGISTRY}/${imgName}:build-${BUILD_NUMBER}"
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Check Health') {
-            steps {
-                script {
-                    sh 'docker-compose -f compose/docker-compose.base.yml -f compose/docker-compose.test.yml up -d'
-                    echo "Verifying health for all HMS services..."
-                    sh '''
-                    set -e
-                    SERVICES=$(docker ps --format '{{.Names}}' | grep 'hms_')
-                    for svc in $SERVICES; do
-                        echo "Verifying $svc..."
-                        HEALTHY=false
-                        for i in {1..20}; do
-                            STATUS=$(docker inspect -f {{.State.Health.Status}} $svc 2>/dev/null || echo "healthy")
-                            if [ "$STATUS" == "healthy" ]; then
-                                echo "✅ $svc is ready"
-                                HEALTHY=true
-                                break
-                            fi
-                            echo "Waiting for $svc... ($i/20)"
-                            sleep 5
-                        done
-                        if [ "$HEALTHY" = false ]; then
-                            echo "❌ $svc failed healthcheck!"
-                            exit 1
-                        fi
-                    done
-                    '''
-                }
-            }
-        }
-
-        stage('Parallel Testing') {
-            steps {
-                script {
-                    def runningServices = sh(script: "docker ps --format '{{.Names}}' | grep 'hms_'", returnStdout: true).trim().split('\n')
-                    def testStages = [:]
-
-                    for (svc in runningServices) {
-                        def serviceName = svc
-                        if (sh(script: "docker exec ${serviceName} test -d /app/tests", returnStatus: true) == 0) {
-                            testStages["Test ${serviceName}"] = {
-                                stage("Testing ${serviceName}") {
-                                    echo "🚀 Executing full test suite for ${serviceName}..."
-                                    
-                                    // 1. Unit Tests
-                                    echo "--- [${serviceName}] Unit Tests ---"
-                                    sh "docker exec ${serviceName} pytest tests/ -m unit --disable-warnings"
-                                    
-                                    // 2. Smoke Tests
-                                    echo "--- [${serviceName}] Smoke Tests ---"
-                                    sh "docker exec ${serviceName} pytest tests/ -m smoke --disable-warnings"
-                                    
-                                    // 3. Integration Tests
-                                    echo "--- [${serviceName}] Integration Tests ---"
-                                    sh "docker exec ${serviceName} pytest tests/ -m integration --disable-warnings"
-                                    
-                                    // 4. Regression Tests
-                                    echo "--- [${serviceName}] Regression Tests ---"
-                                    sh "docker exec ${serviceName} pytest tests/ -m regression --disable-warnings"
-                                }
-                            }
-                        }
-                    }
-                    
-                    if (testStages) {
-                        parallel testStages
-                    } else {
-                        echo "No services with tests found."
-                    }
-                }
-            }
-        }
-
-        stage('Generate Coverage') {
-            steps {
-                script {
-                    def runningServices = sh(script: "docker ps --format '{{.Names}}' | grep 'hms_'", returnStdout: true).trim().split('\n')
-                    for (svc in runningServices) {
-                        if (sh(script: "docker exec ${svc} test -d /app/tests", returnStatus: true) == 0) {
-                            echo "Generating coverage for ${svc}..."
-                            sh "docker exec ${svc} pytest --cov=. --cov-report=xml:/app/coverage.xml"
-                            sh "docker cp ${svc}:/app/coverage.xml ./coverage/coverage-${svc}.xml"
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonar-scanner'
-                    def coverageFiles = sh(script: "ls coverage/*.xml | paste -sd ',' -", returnStdout: true).trim()
-                    
-                    withSonarQubeEnv('sonarqube') {
-                        sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=healix-hms \
-                            -Dsonar.sources=. \
-                            -Dsonar.python.version=3 \
-                            -Dsonar.python.coverage.reportPaths=${coverageFiles}"
-                    }
-                }
-            }
-        }
-
-        stage('Quality Gate Check') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
+    stage('Checkout SCM') {
+        steps {
+            checkout scm
         }
     }
 
-    post {
-        always {
+    stage('Initialize and Clean') {
+        steps {
             sh 'docker-compose -f compose/docker-compose.base.yml down || true'
             sh 'docker image prune -f'
+            sh 'rm -rf coverage && mkdir -p coverage'
+        }
+    }
+
+    stage('Static Analysis (Lint)') {
+        steps {
+            echo "Running containerized linting..."
+            sh '''
+            docker run --rm -v ${WORKSPACE}:/app -w /app python:3.10-slim \
+            sh -c "pip install flake8 && flake8 . --exclude=venv,node_modules --ignore=E501"
+            '''
+        }
+    }
+
+    stage('Build and Tag Images') {
+        steps {
+            script {
+                echo "Building and tagging microservices..."
+                sh 'docker-compose -f compose/docker-compose.base.yml -f compose/docker-compose.test.yml build'
+
+                def services = sh(
+                    script: "docker-compose -f compose/docker-compose.base.yml config --services",
+                    returnStdout: true
+                ).trim().split('\n')
+
+                for (svc in services) {
+                    if (svc) {
+                        def imgName = "hms_${svc}"
+
+                        sh "docker tag ${imgName}:latest ${REGISTRY}/${imgName}:${GIT_TAG}"
+                        sh "docker tag ${imgName}:latest ${REGISTRY}/${imgName}:build-${BUILD_TAG}"
+                    }
+                }
+            }
+        }
+    }
+
+    stage('Check Health') {
+        steps {
+            script {
+                sh 'docker-compose -f compose/docker-compose.base.yml -f compose/docker-compose.test.yml up -d'
+
+                sh '''
+                set -e
+                SERVICES=$(docker ps --format '{{.Names}}' | grep 'hms_' || true)
+
+                for svc in $SERVICES; do
+                    echo "Checking $svc..."
+                    HEALTHY=false
+
+                    for i in {1..20}; do
+                        STATUS=$(docker inspect -f {{.State.Health.Status}} $svc 2>/dev/null || echo "unhealthy")
+
+                        if [ "$STATUS" = "healthy" ]; then
+                            echo "✅ $svc ready"
+                            HEALTHY=true
+                            break
+                        fi
+
+                        sleep 5
+                    done
+
+                    if [ "$HEALTHY" = false ]; then
+                        echo "❌ $svc failed healthcheck"
+                        exit 1
+                    fi
+                done
+                '''
+            }
+        }
+    }
+
+    stage('Parallel Testing') {
+        steps {
+            script {
+                def runningServices = sh(
+                    script: "docker ps --format '{{.Names}}' | grep 'hms_' || true",
+                    returnStdout: true
+                ).trim().split('\n')
+
+                def testStages = [:]
+
+                for (svc in runningServices) {
+                    def serviceName = svc
+
+                    if (serviceName && sh(
+                        script: "docker exec ${serviceName} test -d /app/tests",
+                        returnStatus: true
+                    ) == 0) {
+
+                        testStages["Test ${serviceName}"] = {
+                            echo "🚀 Testing ${serviceName}"
+
+                            sh "docker exec ${serviceName} pytest tests/ -m unit --disable-warnings"
+                            sh "docker exec ${serviceName} pytest tests/ -m smoke --disable-warnings"
+                            sh "docker exec ${serviceName} pytest tests/ -m integration --disable-warnings"
+                            sh "docker exec ${serviceName} pytest tests/ -m regression --disable-warnings"
+                        }
+                    }
+                }
+
+                if (testStages) {
+                    timeout(time: 15, unit: 'MINUTES') {
+                        parallel testStages
+                    }
+                } else {
+                    echo "No services with tests found."
+                }
+            }
+        }
+    }
+
+    stage('Generate Coverage') {
+        steps {
+            script {
+                def runningServices = sh(
+                    script: "docker ps --format '{{.Names}}' | grep 'hms_' || true",
+                    returnStdout: true
+                ).trim().split('\n')
+
+                for (svc in runningServices) {
+                    if (svc && sh(
+                        script: "docker exec ${svc} test -d /app/tests",
+                        returnStatus: true
+                    ) == 0) {
+
+                        sh "docker exec ${svc} pytest --cov=. --cov-report=xml:/app/coverage.xml"
+                        sh "docker cp ${svc}:/app/coverage.xml ./coverage/coverage-${svc}.xml"
+                    }
+                }
+            }
+        }
+    }
+
+    stage('SonarQube Analysis') {
+        steps {
+            script {
+                def scannerHome = tool 'sonar-scanner'
+
+                def coverageFiles = sh(
+                    script: "ls coverage/*.xml 2>/dev/null | paste -sd ',' -",
+                    returnStdout: true
+                ).trim()
+
+                withSonarQubeEnv('sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=healix-hms \
+                    -Dsonar.sources=. \
+                    -Dsonar.python.version=3 \
+                    -Dsonar.python.coverage.reportPaths=${coverageFiles}"
+                }
+            }
+        }
+    }
+
+    stage('Quality Gate Check') {
+        steps {
+            timeout(time: 5, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
         }
     }
 }
 
-    post {
-        always {
-            sh 'docker-compose -f compose/docker-compose.base.yml down || true'
-            sh 'docker image prune -f'
-        }
+post {
+    always {
+        sh 'docker-compose -f compose/docker-compose.base.yml down || true'
+        sh 'docker image prune -f'
     }
+}
+```
+
 }
